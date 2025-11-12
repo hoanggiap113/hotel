@@ -20,7 +20,7 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="bg-gray-50 mt-6">
+      <section className="mt-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-8 py-16">
           {/* Left side */}
           <div className="flex flex-col max-w-xl space-y-6 ml-5">
