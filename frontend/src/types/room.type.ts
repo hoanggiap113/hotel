@@ -21,8 +21,8 @@ export enum EAmenity {
   WIFI = "wifi",
   BREAKFAST = "breakfast",
   BATHTUB = "bathtub",   
-  AIR_CONDITIONING = "air_conditioning",
-  POOL = "pool",         
+  POOL = "pool",
+  PARKING = "parking"
 }
 
 export interface IRoom {
@@ -62,3 +62,26 @@ export interface RoomFilter{
   amenities?:EAmenity[];
   rating?:object;
 }
+
+export const RoomTypeLabel: Record<ERoomType, string> = {
+  [ERoomType.SUITE]: "Phòng Suite",
+  [ERoomType.DELUXE]: "Phòng Deluxe",
+  [ERoomType.SINGLE]: "Phòng Đơn",
+  [ERoomType.DOUBLE]: "Phòng Đôi",
+};
+
+export const BedTypeLabel: Record<EBedType, string> = {
+  [EBedType.KING]: "Giường King",
+  [EBedType.QUEEN]: "Giường Queen",
+  [EBedType.TWIN]: "Giường Đôi (Twin)",
+  [EBedType.SINGLE]: "Giường Đơn",
+};
+
+export const AmenityLabel: Record<EAmenity, string> = {
+  [EAmenity.TV]: "TV",
+  [EAmenity.WIFI]: "Wi-Fi",
+  [EAmenity.BREAKFAST]: "Bữa sáng",
+  [EAmenity.BATHTUB]: "Bồn tắm",
+  [EAmenity.POOL]: "Hồ bơi",
+  [EAmenity.PARKING]: "Bãi gửi xe"
+};

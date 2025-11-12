@@ -73,6 +73,7 @@ export class UserService {
       id: existUser.id,
       name: existUser.name,
       email:existUser.email,
+      roles:existUser.roles,
       createdAt:existUser.createdAt,
       updatedAt:existUser.updatedAt
     }

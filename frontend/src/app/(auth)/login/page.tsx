@@ -21,12 +21,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const onFinish = async (values: LoginUserForm) => {
     try {
-      console.log(values);
       const res = await api.post("/login", values, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      console.log(res.data);
       const { accessToken, user } = res.data;
       if (!accessToken) {
         throw new Error("Không nhận được token");
@@ -34,8 +34,8 @@ export default function LoginPage() {
       dispatch(loginSuccess({ accessToken, user }));
       message.success("Đăng nhập thành công");
       //Check role
-      const role = user.role?.toLowerCase();
-      if (role?.includes("admin") || role?.includes("manager")) {
+      const roleString = user.roles?.join(",")?.toLowerCase();
+      if (roleString?.includes("admin") || roleString?.includes("manager")) {
         router.push("/admin");
       } else {
         router.push("/");

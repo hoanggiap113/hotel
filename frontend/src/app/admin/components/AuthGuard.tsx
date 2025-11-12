@@ -19,9 +19,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       router.replace("/");
       return;
     }
-
     // Chuyển tất cả về chữ thường để tránh sai khác
     const lowerRoles = roles.map((r) => r.toLowerCase());
+    console.log(lowerRoles);
     const isAdminOrManager =
       lowerRoles.includes("admin") || lowerRoles.includes("manager");
 

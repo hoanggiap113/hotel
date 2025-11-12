@@ -8,10 +8,10 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const menuItems = [
-    { label: "Dashboard", icon: AccountBookFilled, path: "/dashboard" },
-    { label: "Người dùng", icon: UserOutlined, path: "/users" },
-    { label: "Phòng", icon: HomeOutlined, path: "/rooms" },
-    { label: "Đặt phòng", icon: ContainerFilled, path: "/bookings" },
+    { label: "Dashboard", icon: AccountBookFilled, path: "/admin/dashboard" },
+    { label: "Người dùng", icon: UserOutlined, path: "/admin/users" },
+    { label: "Phòng", icon: HomeOutlined, path: "/admin/rooms" },
+    { label: "Đặt phòng", icon: ContainerFilled, path: "/admin/bookings" },
   ];
 
   return (
