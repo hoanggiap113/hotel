@@ -1,7 +1,6 @@
-// ProgressBar.tsx đã sửa để mô phỏng Ant Design Steps (Visual-Only)
 import React from 'react';
 
-// Icon checkmark đơn giản (có thể thay bằng SVG nếu muốn)
+// Icon checkmark
 const CheckIcon = () => (
     <svg 
         className="h-5 w-5 fill-white" 

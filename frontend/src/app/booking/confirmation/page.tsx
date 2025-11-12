@@ -40,7 +40,7 @@ export default function BookingConfirmationPage() {
     new Date("2025-12-15"),
     new Date("2025-12-17")
   ); // 2 đêm
-  const TOTAL_ROOM_PRICE = MOCK_ROOM.price * NIGHTS; // 8.000.000
+  const TOTAL_ROOM_PRICE = MOCK_ROOM.price * NIGHTS; 
   const MOCK_TAX = 500000;
   const MOCK_TOTAL_PAYMENT = TOTAL_ROOM_PRICE + MOCK_TAX;
   const currentStage = 2;
@@ -50,7 +50,7 @@ export default function BookingConfirmationPage() {
     roomId: MOCK_ROOM.id,
     checkIn: new Date("2025-12-15T00:00:00.000Z"),
     checkOut: new Date("2025-12-17T00:00:00.000Z"),
-    status: EBookingStatus.PENDING, // Trang xác nhận nên đặt là PENDING
+    status: EBookingStatus.PENDING, 
     pricing: {
       roomPrice: TOTAL_ROOM_PRICE,
       tax: MOCK_TAX,
@@ -70,7 +70,7 @@ export default function BookingConfirmationPage() {
     _id: "68da7a25d1c130ab5d8b70f1",
     bookingId: MOCK_BOOKING._id,
     amount: MOCK_TOTAL_PAYMENT,
-    method: EPaymentMethod.CASH, // Giả định đã chọn Thanh toán tại chỗ
+    method: EPaymentMethod.CASH, 
     status: EPaymentStatus.PENDING,
     transactionId: null,
     paidAt: null,
@@ -112,13 +112,13 @@ export default function BookingConfirmationPage() {
           >
             <RoomDetailCard room={MOCK_ROOM} />
 
-            {/* Thẻ thông tin khách hàng */}
+
             <GuestInfoCard guests={MOCK_BOOKING.guests} />
           </div>
 
        
           <div className="md:w-3/5 flex flex-col justify-between">
-            {/* Booking Summary - Nội dung tóm tắt */}
+
             <div className="grow">
               <BookingSummaryCard
                 booking={MOCK_BOOKING}
