@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import Image from "next/image";
 import SearchBar from "./component/SearchBar";
 import { Swiper, SwiperSlide } from "swiper/react";

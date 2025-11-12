@@ -4,11 +4,11 @@ import { calculateNights } from "@/lib/calculateNight";
 import { ERoomType, EBedType, EAmenity, IRoom } from "@/types/room.type";
 import { EBookingStatus, IBooking } from "@/types/booking.type";
 import { EPaymentMethod, EPaymentStatus, IPayment } from "@/types/payment.type";
-
+import { useRouter } from "next/navigation";
 import RoomDetailCard from "../components/RoomDetail";
 import GuestInfoCard from "../components/GuestInfo";
 import BookingSummaryCard from "../components/BookingSumary";
-import ProgressBar from '../components/ProgressBar';
+import ProgressBar from "../components/ProgressBar";
 
 export default function BookingConfirmationPage() {
   const MOCK_ROOM: IRoom = {
@@ -40,7 +40,7 @@ export default function BookingConfirmationPage() {
     new Date("2025-12-15"),
     new Date("2025-12-17")
   ); // 2 đêm
-  const TOTAL_ROOM_PRICE = MOCK_ROOM.price * NIGHTS; 
+  const TOTAL_ROOM_PRICE = MOCK_ROOM.price * NIGHTS;
   const MOCK_TAX = 500000;
   const MOCK_TOTAL_PAYMENT = TOTAL_ROOM_PRICE + MOCK_TAX;
   const currentStage = 2;
@@ -50,7 +50,7 @@ export default function BookingConfirmationPage() {
     roomId: MOCK_ROOM.id,
     checkIn: new Date("2025-12-15T00:00:00.000Z"),
     checkOut: new Date("2025-12-17T00:00:00.000Z"),
-    status: EBookingStatus.PENDING, 
+    status: EBookingStatus.PENDING,
     pricing: {
       roomPrice: TOTAL_ROOM_PRICE,
       tax: MOCK_TAX,
@@ -70,16 +70,19 @@ export default function BookingConfirmationPage() {
     _id: "68da7a25d1c130ab5d8b70f1",
     bookingId: MOCK_BOOKING._id,
     amount: MOCK_TOTAL_PAYMENT,
-    method: EPaymentMethod.CASH, 
+    method: EPaymentMethod.CASH,
     status: EPaymentStatus.PENDING,
     transactionId: null,
     paidAt: null,
     createdAt: new Date("2024-09-28T00:00:00.000Z"),
     updatedAt: new Date("2024-09-28T00:00:00.000Z"),
   };
+  const router = useRouter();
+
   const [isProcessing, setIsProcessing] = useState(false);
   const handleCancel = () => {
     console.log("Hủy Phòng clicked. Chuyển hướng người dùng về bước trước.");
+    router.back();
   };
   const handleConfirm = () => {
     setIsProcessing(true);
@@ -91,6 +94,7 @@ export default function BookingConfirmationPage() {
       console.log(
         "Chuyển sang bước thanh toán hoặc trang xác nhận thành công."
       );
+      router.push("/booking/success");
     }, 1500);
   };
 
@@ -112,13 +116,10 @@ export default function BookingConfirmationPage() {
           >
             <RoomDetailCard room={MOCK_ROOM} />
 
-
             <GuestInfoCard guests={MOCK_BOOKING.guests} />
           </div>
 
-       
           <div className="md:w-3/5 flex flex-col justify-between">
-
             <div className="grow">
               <BookingSummaryCard
                 booking={MOCK_BOOKING}
@@ -127,7 +128,6 @@ export default function BookingConfirmationPage() {
               />
             </div>
 
-         
             <div className="p-4 flex justify-end space-x-4">
               <button
                 type="button"

@@ -2,15 +2,18 @@
 import ProgressBar from "./components/ProgressBar";
 import { EPaymentMethod, PaymentMethodLabel } from "@/types/payment.type";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 export default function BookingConfirmationPage() {
   const MOCK_TOTAL_AMOUNT = 8500000;
   const currentStage = 1; // <--- Dữ liệu nằm ở đây
   const [selectedMethod, setSelectedMethod] = useState<EPaymentMethod>(
     EPaymentMethod.CASH
   );
+  const router = useRouter();
   const handleContinue = () => {
     console.log(`Đã chọn phương thức: ${PaymentMethodLabel[selectedMethod]}.`);
     console.log("Chuyển hướng đến /booking/confirmation...");
+    router.push('/booking/confirmation');
   };
   const paymentMethods = [
     EPaymentMethod.CASH,
@@ -19,6 +22,8 @@ export default function BookingConfirmationPage() {
   ];
   const handleBack = () => {
     console.log("Quay lại bước trước.");
+    router.back();
+    
   };
   return (
     <div className="flex flex-col flex-1">
