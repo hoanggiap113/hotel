@@ -25,8 +25,6 @@ export class RoomController {
   ) {}
 
   @get('/rooms')
-  @authenticate('jwt')
-  @authorize({roles: ['admin', 'manager']} as AuthorizationMetadata)
   @response(200, {
     description: 'Room model instance',
     content: {
