@@ -65,6 +65,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "loopback-connector-mongodb": "^6.3.1",
+    "mongodb": "^7.0.0",
     "multer": "^2.0.2",
     "tslib": "^2.0.0"
   },

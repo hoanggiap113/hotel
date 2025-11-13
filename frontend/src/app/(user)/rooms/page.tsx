@@ -2,11 +2,20 @@
 import { RoomFilter } from "@/types/room.type";
 import RoomCard from "../component/rooms/RoomCard";
 import SidebarFilter from "../component/rooms/SidebarFIlters";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAppSelector } from "@/hooks/reduxHooks";
+import { useSearchParams } from "next/navigation";
+import { IRoom } from "@/types/room.type";
+import { useAppDispatch } from "@/hooks/reduxHooks";
+import { RootState } from "@reduxjs/toolkit/query";
 export default function RoomPage() {
+  const [rooms, setRooms] = useState<IRoom[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
   const hotels = [
     {
-      id:"1",
+      id: "1",
       name: "Savila Hà Nội",
       location: "Phố Cổ, Hà Nội",
       rating: 8.7,
@@ -16,7 +25,7 @@ export default function RoomPage() {
       amenities: ["WiFi miễn phí", "Bữa sáng", "Điều hòa"],
     },
     {
-      id:"2",
+      id: "2",
       name: "Serenity Villa Hotel",
       location: "Quận Hoàn Kiếm",
       rating: 8.3,
@@ -26,12 +35,12 @@ export default function RoomPage() {
       amenities: ["TV màn phẳng", "Bồn tắm"],
     },
   ];
-  const [isLoading,setIsLoading] = useState(false);
-
+  const params = new URLSearchParams(searchParams.toString());
+  console.log(params);
   const handleFilter = async (values: RoomFilter) => {
     setIsLoading(true);
-    console.log(values)
-  }
+    console.log(values);
+  };
 
   return (
     <div className="max-w-7xl mx-auto flex px-8 py-10 gap-6">
@@ -41,7 +50,7 @@ export default function RoomPage() {
       {/* Main content */}
       <section className="flex-1 space-y-6">
         {hotels.map((hotel, index) => (
-          <RoomCard key={index} {...hotel}  />
+          <RoomCard key={index} {...hotel} />
         ))}
       </section>
     </div>

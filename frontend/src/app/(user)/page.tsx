@@ -76,8 +76,8 @@ export default function HomePage() {
           <Swiper
             modules={[Navigation]}
             spaceBetween={24}
-            slidesPerView={2.5} // Số phần tử hiển thị cùng lúc
-            navigation // sẽ tự thêm nút trái/phải
+            slidesPerView={4} 
+            navigation 
             breakpoints={{
               640: { slidesPerView: 2.5 },
               768: { slidesPerView: 3.5 },
@@ -86,13 +86,13 @@ export default function HomePage() {
           >
             {destinations.map((item) => (
               <SwiperSlide key={item.name}>
-                <div className="group cursor-pointer">
+                <div className="group">
                   <div className="relative h-48 w-full rounded-xl overflow-hidden">
                     <Image
                       src={item.img}
                       alt={item.name}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="object-cover"
                     />
                   </div>
                   <div className="flex flex-col items-center pt-2">

@@ -147,4 +147,10 @@ export class RoomController {
     const userId = currentUserProfile.id;
     await this.roomService.deleteRoomById(id, userId);
   }
+  @get('/rooms/most-picked')
+  @response(200)
+  async getMostPickedRoom(){
+      const collection = await this.roomService.getMostPickedRoom(4);
+      return collection;
+  }
 }

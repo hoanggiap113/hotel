@@ -4,6 +4,7 @@ import Link from "next/link";
 import AuthSection from "./AuthSection";
 export default function Header() {
   const navItems = [
+    { name: "Home", href: "/" },
     { name: "Room", href: "/rooms" },
     { name: "About", href: "/" },
     { name: "Contact", href: "/" },

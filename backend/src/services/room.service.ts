@@ -83,8 +83,12 @@ export class RoomService {
       throw new HttpErrors.Conflict(`Tên phòng ${name} đã tồn tại.`);
     }
   }
+    async getMostPickedRoom(limit: 4){
+    const collection = await this.roomRepository.getMostPickedRoom(limit);
+    return collection
+  }
 
-
+//Advance Query
   handleAdvanceQuery(queryFilter?: RoomFilter) {
     const where: any = {};
     if (queryFilter?.name) {
@@ -124,4 +128,5 @@ export class RoomService {
     }
     return where;
   }
+
 }

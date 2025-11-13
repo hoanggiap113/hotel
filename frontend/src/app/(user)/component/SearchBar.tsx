@@ -2,10 +2,29 @@
 "use client";
 import { Form, Input, Button, DatePicker, Select, InputNumber } from "antd";
 import { CalendarOutlined, UserOutlined } from "@ant-design/icons";
-
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxHooks";
+import { updateSearchCriteria } from "@/store/slices/searchSlice";
 export default function SearchBar() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const onFinish = (values: any) => {
-    console.log("Search values:", values);
+    const checkIn = values.checkIn ? values.checkIn.toISOString() : "";
+    const checkOut = values.checkOut ? values.checkOut.toISOString() : "";
+
+    const params = new URLSearchParams();
+    if (values.city) params.set("city", values.city);
+    if (checkIn) params.set("checkIn", checkIn);
+    if (checkOut) params.set("checkOut", checkOut);
+    if (values.capacity) params.set("capacity", values.capacity.toString());
+
+    const searchPayload ={
+      checkIn: values.checkIn ? values.checkIn.toISOString() : null,
+      checkOut: values.checkOut ? values.checkOut.toISOString() : null,
+      capacity: values.capacity || null,
+    }
+    dispatch(updateSearchCriteria(searchPayload));
+    router.push(`/rooms?${params.toString()}`);
   };
   return (
     <>
@@ -34,12 +53,12 @@ export default function SearchBar() {
 
               {/* 2. Check In Date Picker */}
               <Form.Item
-                name="checkin"
+                name="checkIn"
                 colon={false}
                 className="w-full md:flex-1 md:px-2 !mb-0"
               >
                 <DatePicker
-                  placeholder="Select date"
+                  placeholder="Ngày đi"
                   variant="borderless"
                   // Thay đổi: Thêm prefix, xóa suffix, xóa !p-0
                   prefix={<CalendarOutlined className="text-gray-400" />}
@@ -48,18 +67,34 @@ export default function SearchBar() {
                 />
               </Form.Item>
 
-              {/* --- Thêm Divider 2 --- */}
               <div className="hidden md:block w-px h-6 bg-gray-200"></div>
 
-              {/* 3. Check Out Date Picker */}
               <Form.Item
-                name="checkout"
+                name="checkOut"
                 colon={false}
-                // Thay đổi: Dùng px-2
                 className="w-full md:flex-1 md:px-2 !mb-0"
+                dependencies={["checkIn"]}
+                rules={[
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      const checkin_value = getFieldValue("checkIn");
+
+                      if (!value || !checkin_value) {
+                        return Promise.resolve();
+                      }
+
+                      if (value.isBefore(checkin_value, "day")) {
+                        return Promise.reject(
+                          new Error("Ngày về phải sau hoặc bằng ngày đi!")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  }),
+                ]}
               >
                 <DatePicker
-                  placeholder="Select date"
+                  placeholder="Ngày về"
                   variant="borderless"
                   // Thay đổi: Thêm prefix, xóa suffix, xóa !p-0
                   prefix={<CalendarOutlined className="text-gray-400" />}
