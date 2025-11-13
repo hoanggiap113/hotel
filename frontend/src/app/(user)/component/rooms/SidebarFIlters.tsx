@@ -23,7 +23,7 @@ export default function SidebarFilter({
 }) {
   const [filters, setFilters] = useState<RoomFilter>({
     priceFrom: 0,
-    priceTo: 500000,
+    priceTo: 5000000,
   });
 
   const handleChange = (key: keyof RoomFilter, value: any) => {
@@ -125,9 +125,13 @@ export default function SidebarFilter({
           // được kiểm soát bởi state `filters`, giúp nó đồng bộ với giá trị hiển thị bên trên.
           value={[filters.priceFrom!, filters.priceTo!]}
           onChange={(v) => {
-            // ... (giữ nguyên logic handleChange)
-            handleChange("priceFrom", v[0]);
-            handleChange("priceTo", v[1]);
+            const updated = {
+              ...filters,
+              priceFrom: v[0],
+              priceTo: v[1],
+            };
+            setFilters(updated);
+            onFilterChange?.(updated);
           }}
           tooltip={{
             formatter: (v) => v?.toLocaleString("vi-VN") + " ₫",

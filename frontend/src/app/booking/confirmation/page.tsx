@@ -5,10 +5,10 @@ import { ERoomType, EBedType, EAmenity, IRoom } from "@/types/room.type";
 import { EBookingStatus, IBooking } from "@/types/booking.type";
 import { EPaymentMethod, EPaymentStatus, IPayment } from "@/types/payment.type";
 import { useRouter } from "next/navigation";
-import RoomDetailCard from "../components/RoomDetail";
-import GuestInfoCard from "../components/GuestInfo";
-import BookingSummaryCard from "../components/BookingSumary";
-import ProgressBar from "../components/ProgressBar";
+import RoomDetailCard from "./components/RoomDetail";
+import GuestInfoCard from "./components/GuestInfo";
+import BookingSummaryCard from "./components/BookingSumary";
+import ProgressBar from "./components/ProgressBar";
 
 export default function BookingConfirmationPage() {
   const MOCK_ROOM: IRoom = {
@@ -124,7 +124,6 @@ export default function BookingConfirmationPage() {
               <BookingSummaryCard
                 booking={MOCK_BOOKING}
                 payment={MOCK_PAYMENT}
-                roomPricePerNight={MOCK_ROOM.price}
               />
             </div>
 

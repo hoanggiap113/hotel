@@ -11,13 +11,11 @@ import {
 interface BookingSummaryCardProps {
   booking: IBooking;
   payment: IPayment;
-  roomPricePerNight: number;
 }
 
 export default function BookingSummaryCard({
   booking,
   payment,
-  roomPricePerNight,
 }: BookingSummaryCardProps) {
   const nights = calculateNights(booking.checkIn, booking.checkOut);
   const totalPriceDisplay = formatPrice(booking.pricing.total);

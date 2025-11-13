@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import ProgressBar from "../components/ProgressBar";
+import ProgressBar from "../confirmation/components/ProgressBar";
 import Link from "next/link"; 
 export default function CompletePage() {
   const currentStage = 3; 

@@ -1,10 +1,9 @@
 "use client";
-import ProgressBar from "./components/ProgressBar";
+import ProgressBar from "./confirmation/components/ProgressBar";
 import { EPaymentMethod, PaymentMethodLabel } from "@/types/payment.type";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 export default function BookingConfirmationPage() {
-  const MOCK_TOTAL_AMOUNT = 8500000;
   const currentStage = 1; // <--- Dữ liệu nằm ở đây
   const [selectedMethod, setSelectedMethod] = useState<EPaymentMethod>(
     EPaymentMethod.CASH
@@ -34,12 +33,6 @@ export default function BookingConfirmationPage() {
         <h1 className="text-3xl font-bold text-blue-950">
           Chọn Phương Thức Thanh Toán
         </h1>
-        <span className="text-sm text-gray-500">
-          Tổng tiền cần thanh toán:{" "}
-          <strong className="text-red-600">
-            {MOCK_TOTAL_AMOUNT.toLocaleString("vi-VN")} VND
-          </strong>
-        </span>
       </div>
 
       {/* Main Content: Payment Method Cards */}
