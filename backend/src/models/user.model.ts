@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import { Building } from './building.model';
 
 @model({
   settings: {
@@ -48,6 +49,9 @@ export class User extends Entity {
     type: 'date',
   })
   updatedAt: Date;
+
+  @hasMany(() => Building, {keyTo: 'userId'})
+  buildings: Building[]
   [prop: string]: any;
 
   constructor(data?: Partial<User>) {
@@ -56,7 +60,7 @@ export class User extends Entity {
 }
 
 export interface UserRelations {
-  // describe navigational properties here
+  buildings: Building[];
 }
 
 export type UserWithRelations = User & UserRelations;

@@ -27,6 +27,7 @@ import {
 
 import {MyAuthorizationProvider} from './providers/my-authorization.provider';
 import {MulterFileUploadProvider} from './providers/file-upload.provider';
+import { BuildingService } from './services/building.service';
 export {ApplicationConfig};
 
 export class AgendaApplication extends BootMixin(
@@ -53,6 +54,7 @@ export class AgendaApplication extends BootMixin(
     this.service(HashPasswordService);
     this.service(AuthService);
     this.service(SessionService);
+    this.service(BuildingService);
     this.sequence(MySequence);
     this.expressMiddleware('cookieParser', cookieParser() as any, {
       injectConfiguration: false,

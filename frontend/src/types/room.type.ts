@@ -3,7 +3,7 @@ export interface IRoomLocation {
   ward: string;
   address: string;
 }
-export enum ERoomType{
+export enum ERoomType {
   SUITE = "suite",
   DELUXE = "deluxe",
   SINGLE = "single",
@@ -20,9 +20,9 @@ export enum EAmenity {
   TV = "tv",
   WIFI = "wifi",
   BREAKFAST = "breakfast",
-  BATHTUB = "bathtub",   
+  BATHTUB = "bathtub",
   POOL = "pool",
-  PARKING = "parking"
+  PARKING = "parking",
 }
 
 export interface IRoom {
@@ -35,6 +35,10 @@ export interface IRoom {
   price: number;
   amenities: EAmenity[];
   capacity: number;
+  rating: {
+    average: number;
+    reviewsCount: number;
+  };
   createdAt: Date;
   updatedAt: Date;
   location: IRoomLocation;
@@ -49,19 +53,47 @@ export type TRoomFormInput = Omit<IRoom, "id" | "location"> & {
   amenities: EAmenity[];
   capacity: number;
   location: IRoomLocation;
-  image?: string; 
+  image?: string;
 };
 
-export interface RoomFilter{
-  name?:string,
-  roomType?:string;
-  bedType?:string;
-  priceFrom?:number;
-  priceTo?:number;
-  capacity?:number;
-  amenities?:EAmenity[];
-  rating?:object;
+export interface RoomFilter {
+  name?: string;
+  roomType?: string;
+  bedType?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  capacity?: number;
+  amenities?: EAmenity[];
+  rating?: object;
 }
+
+//SideBar filter:
+export interface SidebarFilterState {
+  city?: string; 
+  roomType?: string;
+  bedType?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  amenities?: EAmenity[];
+}
+
+export type BackendRoomFilter = {
+  name?: string;
+  roomType?: string;
+  bedType?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  amenities?: string[];
+  capacityFrom?: number;
+  capacityTo?: number;
+  location?: {
+    city?: string;
+    ward?: string;
+    address?: string;
+  };
+  checkIn?: string | null ;
+  checkOut?: string | null ;
+};
 
 export const RoomTypeLabel: Record<ERoomType, string> = {
   [ERoomType.SUITE]: "Phòng Suite",
@@ -83,5 +115,21 @@ export const AmenityLabel: Record<EAmenity, string> = {
   [EAmenity.BREAKFAST]: "Bữa sáng",
   [EAmenity.BATHTUB]: "Bồn tắm",
   [EAmenity.POOL]: "Hồ bơi",
-  [EAmenity.PARKING]: "Bãi gửi xe"
+  [EAmenity.PARKING]: "Bãi gửi xe",
 };
+
+//City Option:
+export type CityOption = {
+  label: string;
+  value: string;
+};
+
+export const CityOptions: CityOption[] = [
+  { label: "Hà Nội", value: "Hà Nội" },
+  { label: "Đà Nẵng", value: "Đà Nẵng" },
+  { label: "TP.HCM", value: "TP.HCM" },
+  { label: "Nha Trang", value: "Nha Trang" },
+  { label: "Vũng Tàu", value: "Vũng Tàu" },
+  { label: "Ninh Bình", value: "Ninh Bình" },
+  { label: "Huế", value: "Huế"}
+];

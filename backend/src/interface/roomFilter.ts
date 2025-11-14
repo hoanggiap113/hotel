@@ -1,4 +1,3 @@
-import {Room} from '../models';
 export default interface RoomFilter {
   name?: string;
   roomType?: string;
@@ -9,6 +8,8 @@ export default interface RoomFilter {
   location?: LocationFilter
   capacityFrom?: number;
   capacityTo?: number;
+  checkIn?: string
+  checkOut?:string
 }
 
 interface LocationFilter {

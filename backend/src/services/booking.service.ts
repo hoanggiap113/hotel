@@ -8,6 +8,7 @@ import {Booking} from '../models';
 export class BookingService {
   constructor(
     @repository(BookingRepository) public bookingRepository: BookingRepository,
+    
   ) {}
 
   //CRUD

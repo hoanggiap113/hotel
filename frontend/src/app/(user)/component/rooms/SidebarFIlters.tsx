@@ -13,20 +13,22 @@ import {
   BedTypeLabel,
   AmenityLabel,
   RoomFilter,
+  SidebarFilterState,
+  CityOptions,
 } from "@/types/room.type";
 import { FilterOutlined, ReloadOutlined } from "@ant-design/icons";
 import formatPrice from "@/lib/format-price";
 export default function SidebarFilter({
   onFilterChange,
 }: {
-  onFilterChange?: (filter: RoomFilter) => void;
+  onFilterChange?: (filter: SidebarFilterState) => void;
 }) {
-  const [filters, setFilters] = useState<RoomFilter>({
+  const [filters, setFilters] = useState<SidebarFilterState>({
     priceFrom: 0,
     priceTo: 5000000,
   });
 
-  const handleChange = (key: keyof RoomFilter, value: any) => {
+  const handleChange = (key: keyof SidebarFilterState, value: any) => {
     const updated = { ...filters, [key]: value };
     setFilters(updated);
     onFilterChange?.(updated);
@@ -54,12 +56,8 @@ export default function SidebarFilter({
         <Select
           placeholder="Chọn khu vực"
           className="w-full"
-          options={[
-            { label: "Hà Nội", value: "Hà Nội" },
-            { label: "Đà Nẵng", value: "Đà Nẵng" },
-            { label: "TP. Hồ Chí Minh", value: "TPHCM" },
-          ]}
-          onChange={(v) => handleChange("name", v)}
+          options={CityOptions}
+          onChange={(v) => handleChange("city", v)}
           allowClear
         />
       </div>

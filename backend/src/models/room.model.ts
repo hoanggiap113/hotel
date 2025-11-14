@@ -1,14 +1,17 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {Building} from './building.model';
 
-@model({settings : {
-    mongodb: { collection: "rooms" },
-}})
+@model({
+  settings: {
+    mongodb: {collection: 'rooms'},
+  },
+})
 export class Room extends Entity {
   @property({
     type: 'string',
     id: true,
     generated: true,
-    mongodb:{dataType: 'ObjectId'}
+    mongodb: {dataType: 'ObjectId'},
   })
   id?: string;
 
@@ -47,12 +50,6 @@ export class Room extends Entity {
   amenities: string[];
 
   @property({
-    type: 'object',
-    required: true,
-  })
-  location: object;
-
-  @property({
     type: 'number',
     required: true,
   })
@@ -62,8 +59,8 @@ export class Room extends Entity {
     type: 'object',
     default: {
       avarage: 0,
-      reviewCount: 0
-    }
+      reviewCount: 0,
+    },
   })
   rating: object;
 
@@ -74,28 +71,35 @@ export class Room extends Entity {
   images?: string[];
 
   @property({
-    type: 'string',
-    mongodb:{dataType: 'ObjectId'}
-  })
-  ownerId?: string;
-
-  @property({
-    type:'date'
+    type: 'date',
   })
   createdAt: Date;
 
   @property({
-    type: 'date'
+    type: 'string',
+    mongodb: {dataType: 'ObjectId'},
+  })
+  ownerId: string;
+  @property({
+    type: 'date',
   })
   updatedAt: Date;
+  @property({
+    type: 'string',
+    mongodb: {dataType: 'ObjectId'},
+    required: true,
+  })
+  buildingId: string;
 
+  @belongsTo(() => Building)
+  building: Building;
   constructor(data?: Partial<Room>) {
     super(data);
   }
 }
 
 export interface RoomRelations {
-  // describe navigational properties here
+  buildings: Building[]
 }
 
 export type RoomWithRelations = Room & RoomRelations;

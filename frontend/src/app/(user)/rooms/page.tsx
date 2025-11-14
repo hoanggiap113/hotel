@@ -1,57 +1,80 @@
 "use client";
-import { RoomFilter } from "@/types/room.type";
+import { RoomFilter, SidebarFilterState } from "@/types/room.type";
 import RoomCard from "../component/rooms/RoomCard";
 import SidebarFilter from "../component/rooms/SidebarFIlters";
 import { useState, useEffect } from "react";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useSearchParams } from "next/navigation";
 import { IRoom } from "@/types/room.type";
-import { useAppDispatch } from "@/hooks/reduxHooks";
-import { RootState } from "@reduxjs/toolkit/query";
+import { Spin } from "antd";
+import { BackendRoomFilter } from "@/types/room.type";
+import api from "@/lib/api";
 export default function RoomPage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const dispatch = useAppDispatch();
-  const hotels = [
-    {
-      id: "1",
-      name: "Savila Hà Nội",
-      location: "Phố Cổ, Hà Nội",
-      rating: 8.7,
-      reviews: 1200,
-      price: "741.000đ",
-      img: "/example.webp",
-      amenities: ["WiFi miễn phí", "Bữa sáng", "Điều hòa"],
-    },
-    {
-      id: "2",
-      name: "Serenity Villa Hotel",
-      location: "Quận Hoàn Kiếm",
-      rating: 8.3,
-      reviews: 850,
-      price: "768.000đ",
-      img: "/example2.jpg",
-      amenities: ["TV màn phẳng", "Bồn tắm"],
-    },
-  ];
-  const params = new URLSearchParams(searchParams.toString());
-  console.log(params);
-  const handleFilter = async (values: RoomFilter) => {
+  const { checkIn, checkOut, capacity } = useAppSelector(
+    (state) => state.search
+  );
+  const fetchRooms = async (filterData: BackendRoomFilter) => {
     setIsLoading(true);
-    console.log(values);
+    console.log("Đang gọi API với filter:", filterData);
+    try {
+      const res = await api.get<IRoom[]>("/rooms", {
+        params: {
+          filter: filterData,
+        },
+      });
+      setRooms(res.data);
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách phòng:", error);
+      setRooms([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
+  useEffect(() => {
+    const initialFilter: BackendRoomFilter = {
+      checkIn: checkIn,
+      checkOut: checkOut,
+      capacityFrom: capacity,
+    };
+    fetchRooms(initialFilter);
+  }, [checkIn, checkOut, capacity]);
 
+  const handleFilterSearch = (sidebarFilters: SidebarFilterState) => {
+    const { city, ...restOfSidebarFilters } = sidebarFilters;
+
+    const finalFilterObject: BackendRoomFilter = {
+      ...restOfSidebarFilters,
+      checkIn: checkIn,
+      checkOut: checkOut,
+      capacityFrom: capacity,
+      location: city ? { city: city } : undefined,
+    };
+
+    fetchRooms(finalFilterObject);
+  };
+  console.log(rooms);
   return (
     <div className="max-w-7xl mx-auto flex px-8 py-10 gap-6">
       {/* Sidebar */}
-      <SidebarFilter onFilterChange={handleFilter} />
+      <SidebarFilter onFilterChange={handleFilterSearch} />
 
       {/* Main content */}
       <section className="flex-1 space-y-6">
-        {hotels.map((hotel, index) => (
-          <RoomCard key={index} {...hotel} />
-        ))}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-96">
+            <Spin size="large" tip="Đang tìm phòng..." />
+          </div>
+        ) : rooms.length > 0 ? (
+          rooms.map((room) => (
+            <RoomCard  key={room.id} room={room}  />
+          ))
+        ) : (
+          <div className="text-center text-gray-500 h-96 flex items-center justify-center">
+            <p>Không tìm thấy phòng nào phù hợp với tiêu chí của bạn.</p>
+          </div>
+        )}
       </section>
     </div>
   );

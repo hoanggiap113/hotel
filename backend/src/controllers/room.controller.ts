@@ -26,7 +26,6 @@ export class RoomController {
 
   @get('/rooms')
   @response(200, {
-    description: 'Room model instance',
     content: {
       'application/json': {
         schema: {
@@ -37,7 +36,7 @@ export class RoomController {
     },
   })
   async find(
-     @param.query.object('filter', {
+    @param.query.object('filter', {
       type: 'object',
       properties: {
         name: {type: 'string'},
@@ -56,11 +55,12 @@ export class RoomController {
             address: {type: 'string'},
           },
         },
+        checkIn: {type: 'string', format: 'date-time'},
+        checkOut: {type: 'string', format: 'date-time'},
       },
     })
     roomFilter?: RoomFilter,
-): Promise<Room[]> {
-  console.log(roomFilter);
+  ): Promise<Room[]> {
     const rooms = await this.roomService.getRooms(roomFilter);
     if (rooms.length < 0) {
       throw HttpErrors.NotFound('Không tìm thấy phòng nào');
@@ -77,7 +77,7 @@ export class RoomController {
         'application/json': {
           schema: getModelSchemaRef(Room, {
             title: 'NewroomDTO',
-            exclude: ['id', 'createdAt', 'updatedAt', 'ownerId'],
+            exclude: ['id', 'createdAt', 'updatedAt'],
           }),
         },
       },
@@ -149,8 +149,8 @@ export class RoomController {
   }
   @get('/rooms/most-picked')
   @response(200)
-  async getMostPickedRoom(){
-      const collection = await this.roomService.getMostPickedRoom(4);
-      return collection;
+  async getMostPickedRoom() {
+    const collection = await this.roomService.getMostPickedRoom(4);
+    return collection;
   }
 }
