@@ -1,7 +1,7 @@
 import {injectable, /* inject, */ BindingScope} from '@loopback/core';
 import {Filter, repository, FilterBuilder, Where} from '@loopback/repository';
 import {BuildingRepository} from '../repositories';
-import {BuildingFilterParams} from '../interface/IBuilding';
+import { BuildingFilterParams } from '../interface/building-filter.params';
 import {Building} from '../models';
 import { HttpErrors } from '@loopback/rest';
 @injectable({scope: BindingScope.TRANSIENT})
@@ -48,9 +48,6 @@ export class BuildingService {
       if (loc.city) {
         where['location.city'] = loc.city;
       }
-      if (loc.district) {
-        where['location.district'] = loc.district;
-      }
       if (loc.ward) {
         where['location.ward'] = loc.ward;
       }
@@ -59,7 +56,6 @@ export class BuildingService {
       }
     }
 
-    // 4. Gán 'where' vào builder
     filterBuilder.where(where);
 
     // 5. Xử lý 'sort' (sắp xếp)
@@ -78,5 +74,9 @@ export class BuildingService {
     }
 
     return filterBuilder.build();
+  }
+
+  private handleGetAvailableRoom(checkIn:string,checkOut:string){
+    
   }
 }

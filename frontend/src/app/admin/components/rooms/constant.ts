@@ -18,7 +18,6 @@ export const AMENITY_OPTIONS: AmenityOption[] = [
   { label: "Wifi", value: EAmenity.WIFI },
   { label: "Bữa sáng", value: EAmenity.BREAKFAST },
   { label: "Bồn tắm", value: EAmenity.BATHTUB },
-  { label: "Điều hòa", value: EAmenity.AIR_CONDITIONING },
   { label: "Bể bơi", value: EAmenity.POOL },
 ];
 

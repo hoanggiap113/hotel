@@ -6,12 +6,6 @@ export class LocationFilterParams extends Model {
     type: 'string',
   })
   city?: string;
-
-  @property({
-    type: 'string',
-  })
-  district?: string;
-
   @property({
     type: 'string',
   })

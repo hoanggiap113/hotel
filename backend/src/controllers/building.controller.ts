@@ -12,6 +12,7 @@ import {
 import {Building} from '../models';
 import {RoomFilterParams} from '../interface/room-filter.params';
 import { Filter } from '@loopback/repository';
+import { BuildingFilterParams } from '../interface/building-filter.params';
 
 export class BuildingController {
   constructor(
@@ -21,7 +22,7 @@ export class BuildingController {
 
   @get('/buildings')
   @response(200)
-  async getBuildings(@param.query.object('filter') query?: RoomFilterParams) {
+  async getBuildings(@param.query.object('filter') query?: BuildingFilterParams) {
     try {
       console.log(query);
       const buildings = await this.buildingService.getBuildings(query);
