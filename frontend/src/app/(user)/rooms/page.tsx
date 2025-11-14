@@ -9,6 +9,7 @@ import { IRoom } from "@/types/room.type";
 import { Spin } from "antd";
 import { BackendRoomFilter } from "@/types/room.type";
 import api from "@/lib/api";
+import SearchBarCompact from "./components/SearchBarCompact";
 export default function RoomPage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,26 +57,27 @@ export default function RoomPage() {
   };
   console.log(rooms);
   return (
-    <div className="max-w-7xl mx-auto flex px-8 py-10 gap-6">
-      {/* Sidebar */}
-      <SidebarFilter onFilterChange={handleFilterSearch} />
+    <>
+      <SearchBarCompact />
+      <div className="max-w-7xl mx-auto flex px-8 py-10 gap-6">
+        {/* Sidebar */}
+        <SidebarFilter onFilterChange={handleFilterSearch} />
 
-      {/* Main content */}
-      <section className="flex-1 space-y-6">
-        {isLoading ? (
-          <div className="flex justify-center items-center h-96">
-            <Spin size="large" tip="Đang tìm phòng..." />
-          </div>
-        ) : rooms.length > 0 ? (
-          rooms.map((room) => (
-            <RoomCard  key={room.id} room={room}  />
-          ))
-        ) : (
-          <div className="text-center text-gray-500 h-96 flex items-center justify-center">
-            <p>Không tìm thấy phòng nào phù hợp với tiêu chí của bạn.</p>
-          </div>
-        )}
-      </section>
-    </div>
+        {/* Main content */}
+        <section className="flex-1 space-y-6">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-96">
+              <Spin size="large" tip="Đang tìm phòng..." />
+            </div>
+          ) : rooms.length > 0 ? (
+            rooms.map((room) => <RoomCard key={room.id} room={room} />)
+          ) : (
+            <div className="text-center text-gray-500 h-96 flex items-center justify-center">
+              <p>Không tìm thấy phòng nào phù hợp với tiêu chí của bạn.</p>
+            </div>
+          )}
+        </section>
+      </div>
+    </>
   );
 }

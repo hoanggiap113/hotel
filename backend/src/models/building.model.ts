@@ -58,11 +58,6 @@ export class Building extends Entity {
     type: 'date',
   })
   createdAt?: string;
-  @property({
-    type: 'array',
-    itemType: 'string',
-  })
-  services: string[];
 
   @property({
     type: 'date',
