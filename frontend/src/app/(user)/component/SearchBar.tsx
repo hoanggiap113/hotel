@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Form, Input, Button, DatePicker, Select, InputNumber } from "antd";
+import { Form, Input, Button, DatePicker, App, InputNumber } from "antd";
 import { CalendarOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxHooks";
 import { updateSearchCriteria } from "@/store/slices/searchSlice";
 export default function SearchBar() {
   const router = useRouter();
+  const { message } = App.useApp();
   const dispatch = useAppDispatch();
   const onFinish = (values: any) => {
+    if(!values.checkIn && !values.checkOut){
+      message.error("Vui lòng chọn ngày đi và ngày về để chúng tôi có thể hỗ trợ bạn!");
+      return;
+    }
     const checkIn = values.checkIn ? values.checkIn.toISOString() : "";
     const checkOut = values.checkOut ? values.checkOut.toISOString() : "";
 

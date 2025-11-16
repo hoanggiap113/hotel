@@ -1,8 +1,5 @@
-export interface IRoomLocation {
-  city: string;
-  ward: string;
-  address: string;
-}
+import { ILocation } from "./location.type";
+
 export enum ERoomType {
   SUITE = "suite",
   DELUXE = "deluxe",
@@ -41,7 +38,7 @@ export interface IRoom {
   };
   createdAt: Date;
   updatedAt: Date;
-  location: IRoomLocation;
+  location: ILocation;
 }
 
 export type TRoomFormInput = Omit<IRoom, "id" | "location"> & {
@@ -52,7 +49,7 @@ export type TRoomFormInput = Omit<IRoom, "id" | "location"> & {
   price: number;
   amenities: EAmenity[];
   capacity: number;
-  location: IRoomLocation;
+  location: ILocation;
   image?: string;
 };
 
@@ -69,7 +66,7 @@ export interface RoomFilter {
 
 //SideBar filter:
 export interface SidebarFilterState {
-  city?: string; 
+  city?: string;
   roomType?: string;
   bedType?: string;
   priceFrom?: number;
@@ -91,8 +88,8 @@ export type BackendRoomFilter = {
     ward?: string;
     address?: string;
   };
-  checkIn?: string | null ;
-  checkOut?: string | null ;
+  checkIn?: string | null;
+  checkOut?: string | null;
 };
 
 export const RoomTypeLabel: Record<ERoomType, string> = {
@@ -127,9 +124,14 @@ export type CityOption = {
 export const CityOptions: CityOption[] = [
   { label: "Hà Nội", value: "Hà Nội" },
   { label: "Đà Nẵng", value: "Đà Nẵng" },
-  { label: "TP.HCM", value: "TP.HCM" },
+  { label: "TP.HCM", value: "Hồ Chí Minh" },
   { label: "Nha Trang", value: "Nha Trang" },
   { label: "Vũng Tàu", value: "Vũng Tàu" },
   { label: "Ninh Bình", value: "Ninh Bình" },
-  { label: "Huế", value: "Huế"}
+  { label: "Huế", value: "Huế" },
+  { label: "Hội An", value: "Hội An" },
+  { label: "Sa Pa", value: "Sa Pa" },
+  { label: "Phú Quốc", value: "Phú Quốc" },
+  { label: "Cần Thơ", value: "Cần Thơ" },
+  { label: "Hạ Long", value: "Hạ Long" },
 ];

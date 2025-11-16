@@ -9,48 +9,35 @@ import {
   param,
   response,
 } from '@loopback/rest';
-import {Building} from '../models';
-import {RoomFilterParams} from '../interface/room-filter.params';
-import { Filter } from '@loopback/repository';
-import { BuildingFilterParams } from '../interface/building-filter.params';
-
+import {SearchFilter} from '../interface/search-filter';
+import {BuildingResponseResult} from '../interface/response/building-response.model';
 export class BuildingController {
   constructor(
     @inject('services.BuildingService')
     private buildingService: BuildingService,
   ) {}
 
-  @get('/buildings')
-  @response(200)
-  async getBuildings(@param.query.object('filter') query?: BuildingFilterParams) {
+  @get('/buildings/search')
+  @response(200, {
+    description: 'Array of Building model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(BuildingResponseResult, {
+            includeRelations: true,
+          }),
+        },
+      },
+    },
+  })
+  async getBuildings(@param.query.object('filter') filterQuery: SearchFilter) {
     try {
-      console.log(query);
-      const buildings = await this.buildingService.getBuildings(query);
+      const buildings = await this.buildingService.getBuilding(filterQuery);
       return buildings;
     } catch (err) {
       console.log(err);
       throw HttpErrors.InternalServerError('Lỗi máy chủ');
-    }
-  }
-  @get('buildings/{id}')
-  @response(200, {
-    description: 'Building model',
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(Building, {includeRelations: true}),
-      },
-    },
-  })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(Building, {exclude: 'where'}) filter?: Filter<Building>,
-  ): Promise<Building> {
-    try {
-      const building = await this.buildingService.getBuilding(id,filter);
-      return building;
-    } catch (err) {
-      console.log(err);
-      throw HttpErrors.InternalServerError('Có lỗi máy chủ, thử lại sau');
     }
   }
 }

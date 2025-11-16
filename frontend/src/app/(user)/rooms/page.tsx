@@ -1,17 +1,16 @@
 "use client";
-import { RoomFilter, SidebarFilterState } from "@/types/room.type";
-import RoomCard from "../component/rooms/RoomCard";
-import SidebarFilter from "../component/rooms/SidebarFIlters";
+import { SidebarFilterState } from "@/types/room.type";
+import SidebarFilter from "../component/buildings/SidebarFIlters";
 import { useState, useEffect } from "react";
 import { useAppSelector } from "@/hooks/reduxHooks";
-import { useSearchParams } from "next/navigation";
-import { IRoom } from "@/types/room.type";
 import { Spin } from "antd";
 import { BackendRoomFilter } from "@/types/room.type";
 import api from "@/lib/api";
 import SearchBarCompact from "./components/SearchBarCompact";
+import { IBuilding } from "@/types/building.type";
+import BuildingCard from "../component/buildings/BuildingCard";
 export default function RoomPage() {
-  const [rooms, setRooms] = useState<IRoom[]>([]);
+  const [buildings, setBuildings] = useState<IBuilding[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { checkIn, checkOut, capacity } = useAppSelector(
     (state) => state.search
@@ -20,15 +19,15 @@ export default function RoomPage() {
     setIsLoading(true);
     console.log("Đang gọi API với filter:", filterData);
     try {
-      const res = await api.get<IRoom[]>("/rooms", {
+      const res = await api.get("/buildings/search", {
         params: {
           filter: filterData,
         },
       });
-      setRooms(res.data);
+      setBuildings(res.data);
     } catch (error) {
       console.error("Lỗi khi tải danh sách phòng:", error);
-      setRooms([]);
+      setBuildings([]);
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +54,6 @@ export default function RoomPage() {
 
     fetchRooms(finalFilterObject);
   };
-  console.log(rooms);
   return (
     <>
       <SearchBarCompact />
@@ -69,8 +67,8 @@ export default function RoomPage() {
             <div className="flex justify-center items-center h-96">
               <Spin size="large" tip="Đang tìm phòng..." />
             </div>
-          ) : rooms.length > 0 ? (
-            rooms.map((room) => <RoomCard key={room.id} room={room} />)
+          ) : buildings.length > 0 ? (
+            buildings.map((building) => <BuildingCard key={building.id} building={building} />)
           ) : (
             <div className="text-center text-gray-500 h-96 flex items-center justify-center">
               <p>Không tìm thấy phòng nào phù hợp với tiêu chí của bạn.</p>

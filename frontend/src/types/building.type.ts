@@ -1,15 +1,12 @@
-import {EBedType, ERoomType, IRoom } from "./room.type";
-import { EAmenity } from "./amenity/amenity.type";
+import { IRoom } from "./room.type";
 import { ILocation } from "./location.type";
 export interface IBuilding {
   id?: string;
   name?: string;
   description?: string;
   images?: string[];
-  roomType: ERoomType;
-  bedType: EBedType;
+
   price: number;
-  capacity: number;
   rating: {
     average: number;
     reviewsCount: number;
@@ -18,4 +15,5 @@ export interface IBuilding {
   createdAt?: Date;
   updatedAt?: Date;
   location: ILocation;
+  userId?: string;
 }
