@@ -1,7 +1,5 @@
 import { SearchFilter } from "../interface/search-filter";
 
-
-
   export function buildBuildingWhere(
     filters: SearchFilter,
     availableBuildingIds: string[],

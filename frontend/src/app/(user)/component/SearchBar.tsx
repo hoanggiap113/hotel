@@ -10,26 +10,21 @@ export default function SearchBar() {
   const { message } = App.useApp();
   const dispatch = useAppDispatch();
   const onFinish = (values: any) => {
-    if(!values.checkIn && !values.checkOut){
-      message.error("Vui lòng chọn ngày đi và ngày về để chúng tôi có thể hỗ trợ bạn!");
+    if (!values.checkIn || !values.checkOut) {
+      message.error(
+        "Vui lòng chọn ngày đi và ngày về để chúng tôi có thể hỗ trợ bạn!"
+      );
       return;
     }
-    const checkIn = values.checkIn ? values.checkIn.toISOString() : "";
-    const checkOut = values.checkOut ? values.checkOut.toISOString() : "";
+    const checkIn = values.checkIn.toISOString();
+    const checkOut = values.checkOut.toISOString();
 
     const params = new URLSearchParams();
     if (values.city) params.set("city", values.city);
-    if (checkIn) params.set("checkIn", checkIn);
-    if (checkOut) params.set("checkOut", checkOut);
+    params.set("checkIn", checkIn);
+    params.set("checkOut", checkOut);
     if (values.capacity) params.set("capacity", values.capacity.toString());
-
-    const searchPayload ={
-      checkIn: values.checkIn ? values.checkIn.toISOString() : null,
-      checkOut: values.checkOut ? values.checkOut.toISOString() : null,
-      capacity: values.capacity || null,
-    }
-    dispatch(updateSearchCriteria(searchPayload));
-    router.push(`/rooms?${params.toString()}`);
+    router.push(`/buildings?${params.toString()}`);
   };
   return (
     <>

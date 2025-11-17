@@ -17,3 +17,12 @@ export interface IBuilding {
   location: ILocation;
   userId?: string;
 }
+export interface IBuildingDetail{
+  id?:string;
+  name?:string;
+  description?:string;
+  images?:string[];
+
+  rooms: IRoom[]
+  location: ILocation
+}

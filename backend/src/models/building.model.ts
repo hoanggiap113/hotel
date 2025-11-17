@@ -5,7 +5,6 @@ import {
   model,
   property,
 } from '@loopback/repository';
-import {ObjectId} from 'mongodb';
 import {Room} from './room.model';
 import {User} from './user.model';
 

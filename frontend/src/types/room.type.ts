@@ -81,8 +81,7 @@ export type BackendRoomFilter = {
   priceFrom?: number;
   priceTo?: number;
   amenities?: string[];
-  capacityFrom?: number;
-  capacityTo?: number;
+  capacity?: number
   location?: {
     city?: string;
     ward?: string;

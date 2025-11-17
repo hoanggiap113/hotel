@@ -1,6 +1,7 @@
-import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasOne, model, property} from '@loopback/repository';
 import {Room} from './room.model';
 import {User} from './user.model';
+import { Payment } from './payment.model';
 
 @model({settings: {
   mongodb: {collection: "bookings"}
@@ -35,6 +36,11 @@ export class Booking extends Entity {
     required: true,
   })
   pricing: object;
+  @property({
+    type:'object',
+    required:true
+  })
+  guests: Object
 
   @property({
     type: 'date',
@@ -48,10 +54,9 @@ export class Booking extends Entity {
 
   @property({
     type: 'string',
-    required: true,
     mongodb: {dataType: 'ObjectId'},
   })
-  userId: string;
+  userId?: string;
   @belongsTo(() => User)
   user: User;
 
@@ -64,6 +69,8 @@ export class Booking extends Entity {
   @belongsTo(() => Room)
   room: Room;
 
+  @hasOne(() => Payment, {keyTo: 'bookingId'})
+  payment: Payment;
   [prop: string]: any;
 
   constructor(data?: Partial<Booking>) {
@@ -74,6 +81,7 @@ export class Booking extends Entity {
 export interface BookingRelations {
   room?: Room;
   user?: User;
+  payment?: Payment;
 }
 
 export type BookingWithRelations = Booking & BookingRelations;

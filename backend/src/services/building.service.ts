@@ -5,14 +5,18 @@ import {
   RoomRepository,
   BookingRepository,
 } from '../repositories';
-import {Building} from '../models';
+import {Booking, Building, Room} from '../models';
 import {SearchFilter} from '../interface/search-filter';
 import {buildRoomWhere} from '../helpers/room.helper';
 import {buildBuildingWhere} from '../helpers/building.helper';
-import { filter } from 'lodash';
+import {filter} from 'lodash';
+import {HttpErrors} from '@loopback/rest';
 // Kiểu trả về tùy chỉnh
 type BuildingWithMinPrice = Building & {price: number};
-
+type BuildingDetail = {
+  building: Building;
+  rooms: Room[];
+}
 @injectable({scope: BindingScope.TRANSIENT})
 export class BuildingService {
   constructor(
@@ -24,10 +28,9 @@ export class BuildingService {
   /**
    * Tìm kiếm tòa nhà bằng cách dùng nhiều hàm 'find' và 'where'.
    */
-async getBuilding(
+  async getBuilding(
     filtersParams: SearchFilter,
   ): Promise<BuildingWithMinPrice[]> {
-    
     const conflictingRoomIds = await this.getConflictingRoomIds(
       filtersParams.checkIn,
       filtersParams.checkOut,
@@ -61,29 +64,63 @@ async getBuilding(
       const roomsOfThisBuilding = availableRooms.filter(
         r => r.buildingId.toString() === building.id?.toString(),
       );
-      const prices = roomsOfThisBuilding.map(r => r.price).filter(p => typeof p === 'number');
+      const prices = roomsOfThisBuilding
+        .map(r => r.price)
+        .filter(p => typeof p === 'number');
       const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
-      
+
       return {
         ...building.toJSON(),
         price: minPrice,
       } as BuildingWithMinPrice;
     });
 
-    filtersParams.sort === 'price_asc' && result.sort((a, b) => a.price - b.price);
-    filtersParams.sort === 'price_desc' && result.sort((a, b) => b.price - a.price);
+    filtersParams.sort === 'price_asc' &&
+      result.sort((a, b) => a.price - b.price);
+    filtersParams.sort === 'price_desc' &&
+      result.sort((a, b) => b.price - a.price);
 
     return result;
   }
-  //Lấy danh sách roomId bị bị booked trong khoảng thời gian đã cho
+  async getBuildingById(
+    id: string,
+    checkIn: string,
+    checkOut: string,
+  ): Promise<BuildingDetail | null> {
+    let buildingResponse: BuildingDetail;
+    const building = await this.buildingRepo.findById(id);
+    if (!building) {
+      throw new HttpErrors.NotFound('Không tìm thấy tòa nhà');
+    }
+    const conflictingRoomIds = await this.getConflictingRoomIds(
+      checkIn,
+      checkOut,
+      building.id,
+    );
+    console.log(conflictingRoomIds);
+    const roomWhere: Where<Room> = {};
+    if (conflictingRoomIds.length > 0) {
+      roomWhere.id = {nin: conflictingRoomIds};
+    }
+    roomWhere.buildingId = building.id;
+    const rooms = await this.roomRepo.find({
+      where: roomWhere
+    })
+
+    return {
+      building: building,
+      rooms: rooms
+    }
+  }
+  //Lấy danh sách roomId bị bị book trong khoảng thời gian đã cho
   private async getConflictingRoomIds(
     checkInStr: string,
     checkOutStr: string,
+    buildingId?: string,
   ): Promise<string[]> {
     if (!checkInStr || !checkOutStr) {
-      return []; 
+      return [];
     }
-
     const checkIn = new Date(checkInStr);
     const checkOut = new Date(checkOutStr);
 
@@ -91,17 +128,28 @@ async getBuilding(
       return [];
     }
 
-    const conflictingBookings = await this.bookingRepo.find({
-      where: {
-        and: [
-          {status: {neq: 'cancelled'}}, 
-          {checkIn: {lt: checkOut}},
-          {checkOut: {gt: checkIn}},
-        ],
-      },
-      fields: {roomId: true}, 
+    const whereBooking: Where<Booking> = {
+      and: [
+        {status: {neq: 'cancelled'}},
+        {checkIn: {lt: checkOut}},
+        {checkOut: {gt: checkIn}},
+      ],
+    };
+    if (buildingId) {
+      const roomsInBuilding = await this.roomRepo.find({
+        where: {buildingId: buildingId},
+        fields: ['id'],
+      });
+      const roomIds = roomsInBuilding.map(r => r.id);
+      if (roomIds.length < 0) {
+        return [];
+      }
+      (whereBooking as any).roomId = {inq: roomIds};
+    }
+    const conflictedRoom = await this.bookingRepo.find({
+      where: whereBooking,
+      fields: {roomId: true},
     });
-    //Đây là danh sách các roomId không trùng lịch
-    return [...new Set(conflictingBookings.map(b => b.roomId))];
+    return [...new Set(conflictedRoom.map(b => b.roomId))];
   }
 }

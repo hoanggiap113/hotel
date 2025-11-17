@@ -11,13 +11,19 @@ export interface IBookingPricing {
   discount: number;
   total: number; // Tổng phải trả cuối cùng
 }
+export interface SessionBookingInfo{
+  checkIn:string,
+  checkOut:string,
+  roomId:string
+}
 
 export interface IBookingGuests {
   name: string;
   phone: string;
   note?: string;
+  email:string
+  paymentMethod:string;
 }
-
 export interface IBooking {
   _id: string;
   userId: string;

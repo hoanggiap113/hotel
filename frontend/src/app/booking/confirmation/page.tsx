@@ -1,94 +1,66 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { calculateNights } from "@/lib/calculateNight";
-import { ERoomType, EBedType, EAmenity, IRoom } from "@/types/room.type";
-import { EBookingStatus, IBooking } from "@/types/booking.type";
+import {
+  EBookingStatus,
+  IBooking,
+  IBookingGuests,
+  SessionBookingInfo,
+} from "@/types/booking.type";
+import { useSessionStorage } from "@/hooks/useSessionStorage";
 import { EPaymentMethod, EPaymentStatus, IPayment } from "@/types/payment.type";
 import { useRouter } from "next/navigation";
 import RoomDetailCard from "./components/RoomDetail";
 import GuestInfoCard from "./components/GuestInfo";
 import BookingSummaryCard from "./components/BookingSumary";
 import ProgressBar from "./components/ProgressBar";
+import api from "@/lib/api";
+import { IRoom } from "@/types/room.type";
 
 export default function BookingConfirmationPage() {
-  const MOCK_ROOM: IRoom = {
-    id: "68da7a25d1c130ab5d8b70e4",
-    name: "Phòng Tình Yêu View Biển",
-    description:
-      "Phòng Deluxe Double rộng rãi, có ban công nhìn ra biển tuyệt đẹp.",
-    images: ["https://placehold.co/400x250/cccccc/333333?text=Room+Image"],
-    roomType: ERoomType.DELUXE,
-    bedType: EBedType.KING,
-    price: 4000000, // Giá 1 đêm
-    amenities: [
-      EAmenity.WIFI,
-      EAmenity.BREAKFAST,
-      EAmenity.TV,
-      EAmenity.BATHTUB,
-    ],
-    capacity: 2,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    location: {
-      city: "Đà Nẵng",
-      ward: "Phường Mỹ An",
-      address: "99 Võ Nguyên Giáp",
-    },
-  };
-
-  const NIGHTS = calculateNights(
-    new Date("2025-12-15"),
-    new Date("2025-12-17")
-  ); // 2 đêm
-  const TOTAL_ROOM_PRICE = MOCK_ROOM.price * NIGHTS;
-  const MOCK_TAX = 500000;
-  const MOCK_TOTAL_PAYMENT = TOTAL_ROOM_PRICE + MOCK_TAX;
-  const currentStage = 2;
-  const MOCK_BOOKING: IBooking = {
-    _id: "68e69915772e5a56980eaceb",
-    userId: "68da7a25d1c130ab5d8b70dd",
-    roomId: MOCK_ROOM.id,
-    checkIn: new Date("2025-12-15T00:00:00.000Z"),
-    checkOut: new Date("2025-12-17T00:00:00.000Z"),
-    status: EBookingStatus.PENDING,
-    pricing: {
-      roomPrice: TOTAL_ROOM_PRICE,
-      tax: MOCK_TAX,
-      discount: 0,
-      total: MOCK_TOTAL_PAYMENT,
-    },
-    guests: {
-      name: "Trần Thị B",
-      phone: "0987654321",
-      note: "Yêu cầu phòng gần cửa sổ",
-    },
-    createdAt: new Date("2024-08-25T00:00:00.000Z"),
-    updatedAt: new Date("2024-08-25T00:00:00.000Z"),
-  };
-
-  const MOCK_PAYMENT: IPayment = {
-    _id: "68da7a25d1c130ab5d8b70f1",
-    bookingId: MOCK_BOOKING._id,
-    amount: MOCK_TOTAL_PAYMENT,
-    method: EPaymentMethod.CASH,
-    status: EPaymentStatus.PENDING,
-    transactionId: null,
-    paidAt: null,
-    createdAt: new Date("2024-09-28T00:00:00.000Z"),
-    updatedAt: new Date("2024-09-28T00:00:00.000Z"),
-  };
   const router = useRouter();
+  const [bookingInfo, setBookingInfo] =
+    useSessionStorage<SessionBookingInfo | null>("bookingInfo", null);
+  const [userInfo, setUserInfo] = useSessionStorage<IBookingGuests | null>(
+    "userInfo",
+    null
+  );
 
+  //State
+  const [room, setRoom] = useState<IRoom | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const currentStage = 2;
+
+  useEffect(() => {
+    if (!bookingInfo || !userInfo) {
+      console.warn("Thiếu thông tin đặt phòng, điều hướng về trang booking...");
+      router.push("/booking");
+      return; // Dừng lại nếu thiếu
+    }
+
+
+    const fetchRoomData = async () => {
+      try {
+        const res = await api.get(`/rooms/${bookingInfo.roomId}`);
+        setRoom(res.data);
+        console.log(res.data);
+      } catch (error) {
+        console.error("Lỗi fetch phòng:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRoomData();
+    setIsLoading(false);
+  }, [bookingInfo, userInfo, router]);
   const handleCancel = () => {
     console.log("Hủy Phòng clicked. Chuyển hướng người dùng về bước trước.");
-    router.back();
+    router.push("/booking");
   };
   const handleConfirm = () => {
     setIsProcessing(true);
-    console.log(
-      `Xác Nhận Đặt Phòng clicked. Tổng tiền: ${MOCK_BOOKING.pricing.total}`
-    );
     setTimeout(() => {
       setIsProcessing(false);
       console.log(
@@ -109,7 +81,7 @@ export default function BookingConfirmationPage() {
       </div>
 
       <div className="mt-8 rounded-xl bg-white shadow-xl overflow-hidden border border-gray-200">
-        <div className="md:flex md:space-x-0">
+        {/* <div className="md:flex md:space-x-0">
           <div
             className="md:w-2/5 border-b md:border-b-0 md:border-r border-gray-200 
                       overflow-y-auto md:max-h-[calc(100vh-10rem)]"
@@ -173,7 +145,8 @@ export default function BookingConfirmationPage() {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
+        Test
       </div>
     </>
   );

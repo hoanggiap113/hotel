@@ -40,4 +40,29 @@ export class BuildingController {
       throw HttpErrors.InternalServerError('Lỗi máy chủ');
     }
   }
+  @get("/buildings/{id}")
+  @response(200, {
+    description: 'Building model instance',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(BuildingResponseResult, {includeRelations: true}),
+      },
+    },
+  })
+  async getBuildingById(
+    @param.path.string('id') id: string,
+    @param.query.string('checkIn') checkIn: string,
+    @param.query.string('checkOut') checkOut: string
+  ) {
+    try {
+      console.log(id);
+      console.log(checkIn);
+      console.log(checkOut);
+      const building = await this.buildingService.getBuildingById(id,checkIn,checkOut);
+      return building;
+    } catch (err) {
+      console.log(err);
+      throw HttpErrors.InternalServerError('Lỗi máy chủ');
+    }
+  } 
 }

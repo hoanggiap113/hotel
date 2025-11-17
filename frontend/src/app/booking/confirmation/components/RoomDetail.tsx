@@ -1,5 +1,5 @@
 "use client";
-import { IRoom,AmenityLabel,BedTypeLabel,EAmenity,EBedType,ERoomType,IRoomLocation,RoomFilter,RoomTypeLabel } from "@/types/room.type";
+import { IRoom,AmenityLabel,BedTypeLabel,RoomTypeLabel } from "@/types/room.type";
 interface RoomDetailCardProps {
   room: IRoom;
 }
