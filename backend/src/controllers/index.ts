@@ -4,3 +4,4 @@ export * from './booking.controller';
 export * from './user.controller';
 export * from './file-upload.controller';
 export * from './building.controller';
+export * from './discount.controller';

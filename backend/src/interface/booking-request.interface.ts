@@ -6,6 +6,7 @@ export interface BookingRequestInterface {
   userId?: string;
   roomId: string;
   paymentMethod: string;
+  discountId?:string;
 }
 
 export interface PricingInterface {

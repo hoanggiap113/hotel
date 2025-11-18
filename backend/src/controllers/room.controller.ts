@@ -17,11 +17,14 @@ import {Room} from '../models';
 import {RoomService} from '../services';
 import {inject} from '@loopback/core';
 import RoomFilter from '../interface/roomFilter';
+import { repository } from '@loopback/repository';
+import { RoomRepository } from '../repositories';
 
 export class RoomController {
   constructor(
     @inject('services.RoomService')
     public roomService: RoomService,
+    @repository(RoomRepository) public roomRepository: RoomRepository
   ) {}
 
   @get('/rooms')
@@ -153,4 +156,18 @@ export class RoomController {
     const collection = await this.roomService.getMostPickedRoom(4);
     return collection;
   }
+
+  // @get("/rooms/pricing/{id}")
+  // @response(200, {
+  //   description: 'Get room pricing details',
+  // })
+  // async getRoomPricingDetails(
+  //   @param.path.string('id') id: string
+  // ): Promise<any> {
+  //   const pricingDetails = await this.roomRepository.;
+  //   if (!pricingDetails) {
+  //     throw HttpErrors.NotFound('Room not found or pricing details unavailable');
+  //   }
+  //   return pricingDetails;
+  // }
 }

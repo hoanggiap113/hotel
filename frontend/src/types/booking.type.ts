@@ -36,3 +36,10 @@ export interface IBooking {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface PricingBreakdown {
+  roomPrice: number;
+  tax: number;
+  discount: number;
+  total: number;
+}

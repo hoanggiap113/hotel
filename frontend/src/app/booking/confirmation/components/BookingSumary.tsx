@@ -1,5 +1,5 @@
 "use client";
-import { IBooking } from "@/types/booking.type";
+import { IBooking, SessionBookingInfo } from "@/types/booking.type";
 import { calculateNights, formatDateDisplay } from "@/lib/calculateNight";
 import formatPrice from "@/lib/format-price";
 import {
@@ -9,17 +9,17 @@ import {
 } from "@/types/payment.type";
 
 interface BookingSummaryCardProps {
-  booking: IBooking;
-  payment: IPayment;
+  bookingInfo: SessionBookingInfo
+  roomPrice: number
 }
 
 export default function BookingSummaryCard({
-  booking,
-  payment,
+  bookingInfo,
+  roomPrice
 }: BookingSummaryCardProps) {
-  const nights = calculateNights(booking.checkIn, booking.checkOut);
-  const totalPriceDisplay = formatPrice(booking.pricing.total);
-  const taxDisplay = formatPrice(booking.pricing.tax);
+  const nights = calculateNights(new Date(bookingInfo.checkIn),new Date(bookingInfo.checkOut));
+  const totalPriceDisplay = formatPrice(roomPrice);
+  const taxDisplay = formatPrice();
   const totalRoomPriceDisplay = formatPrice(booking.pricing.roomPrice);
 
   return (

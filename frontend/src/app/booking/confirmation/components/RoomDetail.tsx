@@ -1,5 +1,6 @@
 "use client";
 import { IRoom,AmenityLabel,BedTypeLabel,RoomTypeLabel } from "@/types/room.type";
+import Image from "next/image";
 interface RoomDetailCardProps {
   room: IRoom;
 }
@@ -9,8 +10,8 @@ export default function RoomDetailCard({room} : RoomDetailCardProps) {
     <>
       <div className="p-4 md:p-6">
         <div className="h-48 w-full overflow-hidden rounded-lg shadow-md mb-5">
-          <img
-            src={room.images?.[0]}
+          <Image
+            src={room.images?.[0] ?? "https://placehold.co/400x250/cccccc/333333?text=Room+Image"}
             alt={room.name}
             className="h-full w-full object-cover"
             onError={(e) => {

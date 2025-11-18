@@ -1,14 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { calculateNights } from "@/lib/calculateNight";
 import {
-  EBookingStatus,
-  IBooking,
   IBookingGuests,
   SessionBookingInfo,
 } from "@/types/booking.type";
 import { useSessionStorage } from "@/hooks/useSessionStorage";
-import { EPaymentMethod, EPaymentStatus, IPayment } from "@/types/payment.type";
 import { useRouter } from "next/navigation";
 import RoomDetailCard from "./components/RoomDetail";
 import GuestInfoCard from "./components/GuestInfo";
@@ -38,7 +34,6 @@ export default function BookingConfirmationPage() {
       router.push("/booking");
       return; // Dừng lại nếu thiếu
     }
-
 
     const fetchRoomData = async () => {
       try {
@@ -81,14 +76,14 @@ export default function BookingConfirmationPage() {
       </div>
 
       <div className="mt-8 rounded-xl bg-white shadow-xl overflow-hidden border border-gray-200">
-        {/* <div className="md:flex md:space-x-0">
+        <div className="md:flex md:space-x-0">
           <div
             className="md:w-2/5 border-b md:border-b-0 md:border-r border-gray-200 
                       overflow-y-auto md:max-h-[calc(100vh-10rem)]"
           >
-            <RoomDetailCard room={MOCK_ROOM} />
+            <RoomDetailCard room={room!} />
 
-            <GuestInfoCard guests={MOCK_BOOKING.guests} />
+            <GuestInfoCard guests={userInfo!} />
           </div>
 
           <div className="md:w-3/5 flex flex-col justify-between">
@@ -145,7 +140,7 @@ export default function BookingConfirmationPage() {
               </button>
             </div>
           </div>
-        </div> */}
+        </div>
         Test
       </div>
     </>

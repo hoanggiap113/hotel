@@ -9,6 +9,7 @@ import {AgendaDataSource} from '../datasources';
 import {Building, Room, RoomRelations} from '../models';
 import {BuildingRepository} from './building.repository';
 import {UserRepository} from './user.repository';
+import { RoomDetailResponse } from '../interface/response/room-detail-response.model';
 export class RoomRepository extends DefaultCrudRepository<
   Room,
   typeof Room.prototype.id,

@@ -9,6 +9,9 @@ export class Payment extends Entity {
     type: 'string',
     id: true,
     generated: true,
+    mongodb:{
+      dataType: 'ObjectId'
+    }
   })
   id?: string;
 
