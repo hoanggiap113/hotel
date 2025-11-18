@@ -52,6 +52,10 @@ export class Building extends Entity {
     type: 'number',
   })
   roomCount?: number;
+  @property({
+    type:'number'
+  })
+  tax?:number;
 
   @property({
     type: 'date',

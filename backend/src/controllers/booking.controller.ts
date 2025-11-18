@@ -37,15 +37,7 @@ export class BookingController {
               roomId: {type: 'string'},
               guests: {type: 'object'},
               paymentMethod: {type: 'string'},
-              pricing: {
-                type: 'object',
-                properties: {
-                  roomPrice: {type: 'number'},
-                  tax: {type: 'number'},
-                  discount: {type: 'number'},
-                  total: {type: 'number'},
-                },
-              },
+              discountId: {type: 'string'}
             },
           },
         },

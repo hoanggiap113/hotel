@@ -21,6 +21,10 @@ export default function GuestInfoCard({ guests }: GuestInfoCardProps) {
             <span className="font-medium text-gray-600">Số điện thoại:</span>
             <span className="font-semibold">{guests.phone}</span>
           </div>
+          <div className="flex justify-between">
+            <span className="font-medium text-gray-600">Email:</span>
+            <span className="font-semibold">{guests.email}</span>
+          </div>
           {guests.note && (
             <div className="pt-2 border-t border-dashed">
               <span className="font-medium text-gray-600 block mb-1">

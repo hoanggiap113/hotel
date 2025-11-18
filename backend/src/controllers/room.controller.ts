@@ -11,7 +11,7 @@ import {
   post,
   requestBody,
   response,
-  RestBindings,
+  
 } from '@loopback/rest';
 import {Room} from '../models';
 import {RoomService} from '../services';

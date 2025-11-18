@@ -1,4 +1,6 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import { DiscountRoom } from './discount-room.model';
+import { Room } from './room.model';
 
 @model({
   settings: {
@@ -46,38 +48,9 @@ export class Discount extends Entity {
   value: number;
 
   @property({
-    type: 'date',
-    required: true,
-  })
-  startDate: string;
-
-  @property({
-    type: 'date',
-    required: true,
-  })
-  endDate: string;
-
-  @property({
     type: 'number',
   })
-  minNights?: number;
-
-  @property({
-    type: 'number',
-  })
-  maxNights?: number;
-
-  @property({
-    type: 'number',
-    required: true,
-  })
-  usageLimit: number;
-
-  @property({
-    type: 'number',
-    required: true,
-  })
-  usedCount: number;
+  usageLimit?: number;
 
   @property({
     type: 'boolean',
@@ -95,14 +68,8 @@ export class Discount extends Entity {
   })
   updatedAt?: string;
 
-  @property({
-    type: 'array',
-    itemType: 'string', 
-    mongodb: {dataType: 'ObjectId'},
-  })
-  applicableBuildingIds?: string[];
-  [prop: string]: any;
-
+  @hasMany(() => Room,{through: {model: () => DiscountRoom}})
+  rooms: Room[];
   constructor(data?: Partial<Discount>) {
     super(data);
   }

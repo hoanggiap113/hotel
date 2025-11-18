@@ -5,3 +5,4 @@ export * from './session.repository';
 export * from './building.repository';
 export * from './payment.repository';
 export * from './discount.repository';
+export * from './discount-room.repository';

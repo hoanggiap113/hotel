@@ -1,5 +1,7 @@
-import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {Building} from './building.model';
+import { Discount } from './discount.model';
+import { DiscountRoom } from './discount-room.model';
 
 @model({
   settings: {
@@ -63,7 +65,10 @@ export class Room extends Entity {
     },
   })
   rating: object;
-
+  @property({
+    type: 'object',
+  })
+  location?: object;
   @property({
     type: 'array',
     itemType: 'string',
@@ -93,6 +98,9 @@ export class Room extends Entity {
 
   @belongsTo(() => Building)
   building: Building;
+
+  @hasMany(() => Discount, {through: {model: () => DiscountRoom}})
+  discounts: Discount[];
   constructor(data?: Partial<Room>) {
     super(data);
   }
@@ -100,6 +108,7 @@ export class Room extends Entity {
 
 export interface RoomRelations {
   buildings: Building[]
+  discounts: Discount[];
 }
 
 export type RoomWithRelations = Room & RoomRelations;

@@ -5,3 +5,4 @@ export * from './session.model';
 export * from './building.model';
 export * from './payment.model';
 export * from './discount.model';
+export * from './discount-room.model';
