@@ -10,6 +10,8 @@ import {
   get,
   requestBody,
   del,
+  RestBindings,
+  Request,
   HttpErrors,
 } from '@loopback/rest';
 import {Booking} from '../models';
@@ -22,6 +24,7 @@ export class BookingController {
   constructor(
     @inject('services.BookingService') public bookingService: BookingService,
     @repository(BookingRepository) public bookingRepo: BookingRepository,
+    @inject(RestBindings.Http.REQUEST) private req: Request,
   ) {}
   @post('/bookings')
   @response(200, {
@@ -49,7 +52,21 @@ export class BookingController {
     bookingData: BookingRequestInterface,
   ): Promise<{booking: Booking; redirectUrl?: string}> {
     try {
-      const result = await this.bookingService.createBooking(bookingData);
+      //Xử lý url:
+      const ipHeader = this.req.headers['x-forwarded-for'];
+      let ipAddr = '';
+      if (ipHeader) {
+        // Header có thể trả về dạng: "client_ip, proxy1_ip, proxy2_ip"
+        ipAddr = Array.isArray(ipHeader) ? ipHeader[0] : ipHeader.split(',')[0];
+      } else {
+        // Fallback nếu không có proxy
+        ipAddr = this.req.socket.remoteAddress || '127.0.0.1';
+      }
+      //Làm sạch ip nếu bẩn
+      if (ipAddr.substr(0, 7) == '::ffff:') {
+        ipAddr = ipAddr.substr(7);
+      }
+      const result = await this.bookingService.createBooking(bookingData,ipAddr);
       return result;
     } catch (err) {
       throw HttpErrors.InternalServerError('Error creating booking');

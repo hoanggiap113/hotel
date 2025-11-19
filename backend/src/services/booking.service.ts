@@ -40,6 +40,7 @@ export class BookingService {
 
   async createBooking(
     bookingData: BookingRequestInterface,
+    clientIp: string,
   ): Promise<{booking: Booking; redirectUrl?: string}> {
     const breakDown = await this.createBreakDownPrice(
       bookingData.roomId,
@@ -52,7 +53,7 @@ export class BookingService {
       checkIn: new Date(bookingData.checkIn),
       checkOut: new Date(bookingData.checkOut),
       guests: bookingData.guests,
-      status: 'pending',
+      status: 'pending' ,
       pricing: breakDown,
       userId: bookingData.userId,
       createdAt: new Date(),
@@ -69,15 +70,13 @@ export class BookingService {
       });
       let redirectUrl = undefined;
 
-      // Kiểm tra nếu phương thức là VNPAY (hoặc ATM, QRCODE tuỳ bạn quy định string từ frontend)
-      if (bookingData.paymentMethod === 'VNPAY') {
+      if (bookingData.paymentMethod === 'vnpay') {
         // Giả sử bạn cần IP Address, trong Service khó lấy trực tiếp req,
         // tạm thời để mặc định hoặc truyền từ Controller xuống.
-        const ipAddr = '127.0.0.1';
 
         redirectUrl = this.vnPayService.buildPaymentUrl(
           payment.amount,
-          ipAddr,
+          clientIp,
           payment.id!, // Quan trọng: Dùng ID Payment vừa tạo để làm TxnRef
           `Thanh toan booking ${booking.id}`,
         );

@@ -151,7 +151,7 @@ export class PaymentController {
       // Điều này giúp User thấy kết quả ngay mà không cần đợi IPN chạy xong (dù IPN thường rất nhanh)
       const payment = await this.paymentRepository.findById(paymentId);
 
-      if (payment && payment.status === 'PENDING' && responseCode === '00') {
+      if (payment && payment.status === 'pending' && responseCode === '00') {
         payment.status = 'success';
         payment.vnpTransactionNo = vnp_Params['vnp_TransactionNo'] as string;
         payment.paidAt = new Date().toISOString();
