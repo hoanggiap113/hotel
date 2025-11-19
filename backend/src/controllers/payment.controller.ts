@@ -44,7 +44,7 @@ export class PaymentController {
     const payment = booking.payment;
 
     // 2. Kiểm tra nếu đã thanh toán rồi thì chặn lại
-    if (payment.status === 'SUCCESS') {
+    if (payment.status === 'completed') {
       throw new HttpErrors.BadRequest('This order has already been paid.');
     }
 
@@ -62,7 +62,7 @@ export class PaymentController {
       payment.amount,
       ipAddr.toString(),
       payment.id!, // Dùng ID của payment làm mã tham chiếu
-      `Thanh toan booking ${booking.code || bookingId}`, // Nội dung ck
+      `Thanh toan booking ${bookingId}`, 
     );
 
     return {url};
@@ -97,7 +97,7 @@ export class PaymentController {
     }
 
     // 4. Kiểm tra xem đơn này đã xử lý trước đó chưa (tránh trùng lặp)
-    if (payment.status !== 'PENDING') {
+    if (payment.status !== 'pending') {
       // Giả sử trạng thái khởi tạo là PENDING
       return {RspCode: '02', Message: 'Order already confirmed'};
     }
@@ -105,7 +105,7 @@ export class PaymentController {
     // 5. Cập nhật trạng thái (Logic quan trọng nhất)
     if (rspCode === '00') {
       // Thanh toán thành công
-      payment.status = 'SUCCESS';
+      payment.status = 'completed';
       payment.vnpTransactionNo = vnp_Params['vnp_TransactionNo'] as string;
       payment.paidAt = new Date().toISOString();
 
@@ -115,7 +115,7 @@ export class PaymentController {
       });
     } else {
       // Thanh toán thất bại
-      payment.status = 'FAILED';
+      payment.status = 'failed';
     }
 
     // Lưu log response code
@@ -126,8 +126,6 @@ export class PaymentController {
     return {RspCode: '00', Message: 'Confirm Success'};
   }
 
-  // --- API 3: RETURN URL (Sau khi khách thanh toán xong, trình duyệt chuyển về đây) ---
-  // URL này khớp với VNP_RETURNURL trong .env: /payments/vnpay/return
   // --- API 3: RETURN URL ---
   @get('/payments/vnpay/return')
   async vnpayReturn(): Promise<any> {
@@ -154,7 +152,7 @@ export class PaymentController {
       const payment = await this.paymentRepository.findById(paymentId);
 
       if (payment && payment.status === 'PENDING' && responseCode === '00') {
-        payment.status = 'SUCCESS';
+        payment.status = 'success';
         payment.vnpTransactionNo = vnp_Params['vnp_TransactionNo'] as string;
         payment.paidAt = new Date().toISOString();
 
@@ -162,7 +160,7 @@ export class PaymentController {
 
         // Update Booking
         await this.bookingRepository.updateById(payment.bookingId, {
-          status: 'CONFIRMED',
+          status: 'confirmed',
         });
       }
 

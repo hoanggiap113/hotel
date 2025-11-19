@@ -23,9 +23,7 @@ export class VnPayService {
   ): string {
     const date = new Date();
     const createDate = moment(date).format('YYYYMMDDHHmmss');
-    const orderId = moment(date).format('DDHHmmss'); // Mã đơn hàng tạm thời nếu cần
 
-    // 1. Tạo Object tham số (Chưa encode)
     let vnp_Params: any = {};
     vnp_Params['vnp_Version'] = '2.1.0';
     vnp_Params['vnp_Command'] = 'pay';
@@ -35,7 +33,7 @@ export class VnPayService {
     vnp_Params['vnp_TxnRef'] = txnRef;
     vnp_Params['vnp_OrderInfo'] = orderInfo;
     vnp_Params['vnp_OrderType'] = 'other';
-    vnp_Params['vnp_Amount'] = Math.floor(amount * 100); // Đảm bảo là số nguyên
+    vnp_Params['vnp_Amount'] = Math.floor(amount * 100);
     vnp_Params['vnp_ReturnUrl'] = this.returnUrl;
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
@@ -45,7 +43,6 @@ export class VnPayService {
     vnp_Params = this.sortObject(vnp_Params);
 
     // 3. Tạo chuỗi dữ liệu để ký (Sign Data)
-    // KHÔNG DÙNG QS Ở ĐÂY để tránh lỗi encode khác nhau
     const signData = Object.keys(vnp_Params)
       .map(key => {
         return (
@@ -123,7 +120,7 @@ export class VnPayService {
     }
   }
 
-  // Hàm sort đơn giản chỉ sort key, không encode value bên trong
+  // Hàm sort
   private sortObject(obj: any) {
     let sorted: any = {};
     let str = [];
