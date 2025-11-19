@@ -1,5 +1,6 @@
 import { AmenityData } from "@/types/amenity-icons";
 import { IBuildingDetail } from "@/types/building.type";
+import { RoomTypeLabel } from "@/types/room.type";
 import Image from "next/image";
 
 export default function AvailableRoomCard({
@@ -22,38 +23,57 @@ export default function AvailableRoomCard({
       {building.rooms.map((room) => {
         const roomAmenities =
           room.amenities
-            ?.map((amenityKey) => AmenityData[amenityKey])
+            ?.map(
+              (amenityKey) =>
+                AmenityData[amenityKey as keyof typeof AmenityData]
+            )
             ?.filter((data) => data !== undefined) ?? [];
+
+        const roomTypeLabel =
+          RoomTypeLabel[room.roomType] ?? room.roomType.toUpperCase();
 
         return (
           <div
             key={room.id}
-            className="flex flex-col md:flex-row gap-4 border rounded-xl shadow-lg overflow-hidden mb-8 bg-white"
+            className="flex flex-col md:flex-row shadow-lg overflow-hidden bg-white mb-3 px-2 "
           >
             {/* Ảnh phòng */}
-            <div className="relative w-full md:w-1/3 h-64 md:h-auto">
+            <div className="relative w-full md:w-1/3 h-60 md:h-auto">
               <Image
                 src={room.images?.[0] ?? "/hero.jpg"}
                 alt={room.name}
                 fill
                 className="object-cover"
               />
+              {/* TAG loại phòng */}
+              <span className="absolute top-3 left-3 bg-blue-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow">
+                {roomTypeLabel}
+              </span>
             </div>
 
             {/* Thông tin phòng */}
-            <div className="flex-1 p-6">
-              <h3 className="text-2xl font-bold text-blue-800">{room.name}</h3>
-              <p className="text-gray-600 mt-2 text-sm">{room.description}</p>
+            <div className="flex-1 p-6 md:pr-0">
+              <h3 className="text-2xl font-bold text-blue-800 leading-snug">
+                {room.name}
+              </h3>
 
+              <p className="text-gray-600 mt-2 mb-4 text-sm leading-relaxed">
+                {room.description}
+              </p>
+
+              {/* Tiện nghi */}
               <div className="mt-4">
-                <h4 className="font-semibold mb-2">Tiện nghi phòng:</h4>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                <h4 className="font-semibold mb-2 text-gray-700">
+                  Tiện nghi phòng
+                </h4>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2">
                   {roomAmenities.map((amenity, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-2 text-sm"
+                      className="flex items-center gap-2 text-sm text-gray-700"
                     >
-                      <i className={`${amenity.icon} text-blue-500 w-5`}></i>
+                      <i className={`${amenity.icon} text-blue-500 w-5`} />
                       <span>{amenity.label}</span>
                     </div>
                   ))}
@@ -61,17 +81,17 @@ export default function AvailableRoomCard({
               </div>
             </div>
 
-            {/* Đặt phòng */}
-            <div className="w-full md:w-1/5 p-6 border-t md:border-t-0 md:border-l border-gray-100 bg-gray-50 flex flex-col justify-center items-center md:items-end">
-              <div className="text-2xl font-bold text-blue-600 mb-4">
-                {room.price.toLocaleString()} VNĐ
-                <span className="text-sm text-gray-500 block md:inline">
-                  {" "}
-                  / đêm
-                </span>
+            {/* Giá & nút đặt phòng */}
+            <div className="md:w-1/4 p-6 border-t md:border-t-0 md:border-l flex flex-col justify-center items-center gap-4">
+              <div className="text-center">
+                <div className="text-3xl font-extrabold text-red-600">
+                  {room.price.toLocaleString()}₫
+                </div>
+                <span className="text-sm text-gray-500">Giá mỗi đêm chưa gồm thuế và phí</span>
               </div>
+
               <button
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded-lg transition duration-150"
+                className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer text-white font-bold py-3 px-6 rounded-lg shadow-sm transition duration-150"
                 onClick={() => handleOrderRoom(room.id)}
               >
                 Chọn phòng

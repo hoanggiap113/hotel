@@ -6,3 +6,4 @@ export * from './file-upload.controller';
 export * from './building.controller';
 export * from './discount.controller';
 export * from './discount-room.controller';
+export * from './payment.controller';

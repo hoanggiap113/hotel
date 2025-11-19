@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { SidebarFilterState } from "@/types/room.type";
 import SidebarFilter from "../component/buildings/SidebarFIlters";
 import { useState, useEffect } from "react";
-import { useAppSelector } from "@/hooks/reduxHooks";
 import { Spin } from "antd";
-import { BackendRoomFilter } from "@/types/room.type";
 import api from "@/lib/api";
 import SearchBarCompact from "./components/SearchBarCompact";
 import { IBuilding } from "@/types/building.type";
@@ -14,11 +13,11 @@ export default function RoomPage() {
   const [buildings, setBuildings] = useState<IBuilding[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname(); // Sẽ lấy "/rooms"
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [checkIn, setCheckIn] = useState<string | null>(null);
   const [checkOut, setCheckOut] = useState<string | null>(null);
-  const fetchRooms = async (filterData: BackendRoomFilter) => {
+  const fetchRooms = async (filterData: SidebarFilterState) => {
     setIsLoading(true);
     try {
       const res = await api.get("/buildings/search", {
@@ -48,7 +47,7 @@ export default function RoomPage() {
 
     setCheckIn(checkIn);
     setCheckOut(checkOut);
-    const filterFromUrl: BackendRoomFilter = {};
+    const filterFromUrl: any = {};
 
     if (checkIn) filterFromUrl.checkIn = checkIn;
     if (checkOut) filterFromUrl.checkOut = checkOut;
@@ -101,7 +100,6 @@ export default function RoomPage() {
     } else {
       currentParams.delete("amenities");
     }
-    console.log(amenities);
     router.push(`${pathname}?${currentParams.toString()}`);
   };
   return (
@@ -126,17 +124,13 @@ export default function RoomPage() {
                 <BuildingCard
                   key={building.id}
                   building={building}
-                  checkIn={checkIn} 
+                  checkIn={checkIn}
                   checkOut={checkOut}
                 />
               ))
             ) : (
-
               buildings.map((building) => (
-                <BuildingCard
-                  key={building.id}
-                  building={building}
-                />
+                <BuildingCard key={building.id} building={building} />
               ))
             )
           ) : (

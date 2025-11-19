@@ -12,7 +12,6 @@ import {
   RoomTypeLabel,
   BedTypeLabel,
   AmenityLabel,
-  RoomFilter,
   SidebarFilterState,
   CityOptions,
 } from "@/types/room.type";

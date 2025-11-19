@@ -1,17 +1,19 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
-import { Booking } from './booking.model';
+import {Booking} from './booking.model';
 
-@model({settings: {
-  mongodb: {collection: "payments"}
-}})
+@model({
+  settings: {
+    mongodb: {collection: 'payments'},
+  },
+})
 export class Payment extends Entity {
   @property({
     type: 'string',
     id: true,
     generated: true,
-    mongodb:{
-      dataType: 'ObjectId'
-    }
+    mongodb: {
+      dataType: 'ObjectId',
+    },
   })
   id?: string;
 
@@ -32,6 +34,34 @@ export class Payment extends Entity {
     required: true,
   })
   status: string;
+  @property({
+    type: 'string',
+    required: false, // Không bắt buộc vì lúc tạo payment chưa có
+  })
+  vnpTxnRef?: string; // Mã đơn hàng gửi sang VNPay (thường dùng luôn id hoặc mã booking)
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  vnpTransactionNo?: string; // Mã giao dịch CỦA VNPAY trả về 
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  vnpResponseCode?: string; // Mã lỗi chi tiết (vd: '00' là thành công, '24' là hủy gd)
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  vnpBankCode?: string; // Ngân hàng khách dùng
+
+  @property({
+    type: 'date',
+  })
+  vnpPayDate?: string; // Thời gian thanh toán ghi nhận từ phía VNPay
 
   @property({
     type: 'date',
@@ -45,12 +75,11 @@ export class Payment extends Entity {
 
   @property({
     type: 'date',
-
   })
   updatedAt?: Date;
 
   @belongsTo(() => Booking)
-  bookingId: string
+  bookingId: string;
 
   [prop: string]: any;
 
@@ -60,7 +89,7 @@ export class Payment extends Entity {
 }
 
 export interface PaymentRelations {
-  booking: Booking
+  booking: Booking;
 }
 
 export type PaymentWithRelations = Payment & PaymentRelations;

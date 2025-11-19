@@ -1,10 +1,13 @@
 "use client";
 import React from "react";
-import ProgressBar from "../confirmation/components/ProgressBar";
+import ProgressBar from "../../confirmation/components/ProgressBar";
 import Link from "next/link"; 
+import { useEffect } from "react";
+import { useSessionStorage } from "@/hooks/useSessionStorage";
+import { IBooking } from "@/types/booking.type";
 export default function CompletePage() {
+  const [Booking,setBooking] = useSessionStorage<IBooking | null>("booking",null);
   const currentStage = 3; 
-
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col items-center justify-center p-4">
       <div className="mb-10">
@@ -15,12 +18,8 @@ export default function CompletePage() {
       <h1 className="text-4xl font-bold text-blue-950 mb-6 text-center">
         Yay! Payment Completed
       </h1>
-
-
       <div className="my-8">
-       
       </div>
-
       {/* Thông báo chi tiết */}
       <p className="text-lg text-gray-700 text-center mb-4">
         Please check your email & phone Message.

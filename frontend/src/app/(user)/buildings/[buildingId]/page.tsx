@@ -20,9 +20,7 @@ export default function BuildingDetailPage() {
   const checkOut = searchParams.get("checkOut");
   const router = useRouter();
 
-  const handleOrderRoom = (
-    roomId: string,
-  ) => {
+  const handleOrderRoom = (roomId: string) => {
     const bookingInfo = {
       checkIn: checkIn,
       checkOut: checkOut,
@@ -151,7 +149,12 @@ export default function BuildingDetailPage() {
         <h3 className="font-bold text-blue-950 text-3xl border-b pb-4 mb-8 text-center md:text-left">
           Các phòng trống
         </h3>
-        <AvailableRoomCard handleOrderRoom={handleOrderRoom} building={building}/>
+        <div className="bg-gray-50 border py-3">
+          <AvailableRoomCard
+            handleOrderRoom={handleOrderRoom}
+            building={building}
+          />
+        </div>
       </div>
       <PlaceSection />
     </div>

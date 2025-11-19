@@ -171,7 +171,16 @@ export class DiscountRoomController {
     try {
       return this.discountRoomRepository.find({
         where: {roomId},
-        include: [{relation: 'discount'}],
+        include: [
+          {
+            relation: 'discount',
+            scope: {
+              where: {
+                active: true,
+              },
+            },
+          },
+        ],
       });
     } catch (err) {
       console.log(err);

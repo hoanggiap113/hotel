@@ -24,8 +24,9 @@ export default function UserBookingForm({
   );
   const paymentMethods = [
     EPaymentMethod.CASH,
-    EPaymentMethod.CREDIT_CARD,
     EPaymentMethod.BANK_TRANSFER,
+    EPaymentMethod.VNPAY,
+    EPaymentMethod.MOMO
   ];
 
   useEffect(() => {

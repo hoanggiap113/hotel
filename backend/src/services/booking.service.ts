@@ -1,4 +1,4 @@
-import {injectable, /* inject, */ BindingScope} from '@loopback/core';
+import {injectable, /* inject, */ BindingScope, inject} from '@loopback/core';
 import {
   BookingRepository,
   BuildingRepository,
@@ -13,6 +13,7 @@ import {BookingRequestInterface} from '../interface/booking-request.interface';
 import {PaymentRepository} from '../repositories/payment.repository';
 import {HttpErrors} from '@loopback/rest';
 import {calculateDate} from '../util/calculateDate.util';
+import {VnPayService} from './vnpay.service';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class BookingService {
@@ -24,6 +25,7 @@ export class BookingService {
     public discountRoomRepo: DiscountRoomRepository,
     @repository(RoomRepository) public roomRepo: RoomRepository,
     @repository(BuildingRepository) public buildingRepo: BuildingRepository,
+    @inject('services.VnPayService') public vnPayService: VnPayService,
   ) {}
 
   //CRUD
@@ -36,7 +38,9 @@ export class BookingService {
     return await this.bookingRepo.findById(id);
   }
 
-  async createBooking(bookingData: BookingRequestInterface): Promise<Booking> {
+  async createBooking(
+    bookingData: BookingRequestInterface,
+  ): Promise<{booking: Booking; redirectUrl?: string}> {
     const breakDown = await this.createBreakDownPrice(
       bookingData.roomId,
       bookingData.checkIn,
@@ -55,15 +59,30 @@ export class BookingService {
       updatedAt: new Date(),
     });
     try {
-      await this.paymentRepo.create({
+      const payment = await this.paymentRepo.create({
         amount: breakDown.total,
-        method: bookingData.paymentMethod || 'unkwon',
+        method: bookingData.paymentMethod || 'unknown',
         status: 'pending',
         bookingId: booking.id,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      return booking;
+      let redirectUrl = undefined;
+
+      // Kiểm tra nếu phương thức là VNPAY (hoặc ATM, QRCODE tuỳ bạn quy định string từ frontend)
+      if (bookingData.paymentMethod === 'VNPAY') {
+        // Giả sử bạn cần IP Address, trong Service khó lấy trực tiếp req,
+        // tạm thời để mặc định hoặc truyền từ Controller xuống.
+        const ipAddr = '127.0.0.1';
+
+        redirectUrl = this.vnPayService.buildPaymentUrl(
+          payment.amount,
+          ipAddr,
+          payment.id!, // Quan trọng: Dùng ID Payment vừa tạo để làm TxnRef
+          `Thanh toan booking ${booking.id}`,
+        );
+      }
+      return {booking, redirectUrl};
     } catch (err) {
       console.log(err);
       await this.bookingRepo.deleteById(booking.id);
@@ -95,7 +114,7 @@ export class BookingService {
     checkIn: string,
     checkOut: string,
     discountId?: string,
-  ){
+  ) {
     const room = await this.roomRepo.findById(roomId);
     if (!room) throw new HttpErrors.NotFound('Không tìm thấy phòng');
 
@@ -145,7 +164,7 @@ export class BookingService {
     if (finalTotal < 0) finalTotal = 0;
 
     return {
-      roomPrice: totalRoomPrice, 
+      roomPrice: totalRoomPrice,
       tax: taxAmount,
       discount: discountAmount,
       total: finalTotal,

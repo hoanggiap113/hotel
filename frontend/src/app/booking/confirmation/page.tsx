@@ -107,7 +107,7 @@ export default function BookingConfirmationPage() {
         discountId: selectedVoucher ? (selectedVoucher._id || selectedVoucher.id) : undefined,
       };
 
-      console.log("Payload gửi đi:", payload); // Debug xem data đúng chưa
+      console.log("Payload gửi đi:", payload); 
 
       const res = await api.post("/bookings", payload);
       
@@ -115,8 +115,9 @@ export default function BookingConfirmationPage() {
         message.success("Đặt phòng thành công!");
         sessionStorage.removeItem("bookingInfo");
         sessionStorage.removeItem("userInfo");
+        sessionStorage.setItem("booking",res.data);
         setTimeout(() => {
-          router.push(`/success/${res.data.id}`);
+          router.push(`/booking/success`);
         }, 2000);
       }
     } catch (err: any) {
