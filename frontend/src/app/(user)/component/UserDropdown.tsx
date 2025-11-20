@@ -13,8 +13,8 @@ interface UserDropdownProps {
 }
 
 const menuItems = [
-    { name: "Đơn phòng", href: "/bookings" },
-    { name: "Profile", href: "/profile" },
+    { name: "Đơn phòng", href: "/account/bookings" },
+    { name: "Profile", href: "/account/profile" },
 ];
 
 export default function UserDropdown({ user }: UserDropdownProps) {

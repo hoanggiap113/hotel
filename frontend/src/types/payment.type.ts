@@ -1,9 +1,7 @@
 // Payment
 export enum EPaymentMethod {
-  CREDIT_CARD = "credit_card",
   CASH = "cash",
-  BANK_TRANSFER = "bank_transfer",
-  VNPAY = "vn_pay",
+  VNPAY = "vnpay",
   MOMO = "momo"
 }
 
@@ -25,9 +23,7 @@ export interface IPayment {
 
 // Label cho phương thức thanh toán
 export const PaymentMethodLabel: Record<EPaymentMethod, string> = {
-  [EPaymentMethod.CREDIT_CARD]: "Thẻ Tín Dụng/Ghi Nợ",
   [EPaymentMethod.CASH]: "Thanh toán tại chỗ (Tiền mặt)",
-  [EPaymentMethod.BANK_TRANSFER]: "Chuyển khoản ngân hàng",
   [EPaymentMethod.VNPAY] : "Thanh toán bằng VNPay",
   [EPaymentMethod.MOMO] : "Thanh toán bằng MOMO"
 };

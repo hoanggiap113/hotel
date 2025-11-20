@@ -37,5 +37,25 @@ export const AmenityData: Record<EAmenity, AmenityIconMap> = {
     label: AmenityLabel[EAmenity.PARKING], // Bãi gửi xe
   },
   // Thêm các tiện ích khác nếu có trong EAmenity
+  [EAmenity.BALCONY]:{
+    icon: '',
+    label:AmenityLabel[EAmenity.BALCONY]
+  },
+  [EAmenity.KITCHENETTE]:{
+    icon: '',
+    label:AmenityLabel[EAmenity.KITCHENETTE]
+  },
+  [EAmenity.LIVING_ROOM]:{
+    icon: '',
+    label:AmenityLabel[EAmenity.LIVING_ROOM]
+  },
+  [EAmenity.PRIVATE_POOL]: {
+    icon: '',
+    label:AmenityLabel[EAmenity.PRIVATE_POOL]
+  },
+  [EAmenity.AIR_CON]: {
+    icon: '',
+    label:AmenityLabel[EAmenity.AIR_CON]
+  }
 };
 

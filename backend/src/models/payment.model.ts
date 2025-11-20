@@ -59,7 +59,7 @@ export class Payment extends Entity {
   vnpBankCode?: string; // Ngân hàng khách dùng
 
   @property({
-    type: 'date',
+    type: 'string',
   })
   vnpPayDate?: string; // Thời gian thanh toán ghi nhận từ phía VNPay
 

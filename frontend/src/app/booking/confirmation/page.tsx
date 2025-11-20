@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
-import { CreateBookingPayload, IBookingGuests, SessionBookingInfo } from "@/types/booking.type";
+import {
+  CreateBookingPayload,
+  IBookingGuests,
+  SessionBookingInfo,
+} from "@/types/booking.type";
 import { useSessionStorage } from "@/hooks/useSessionStorage";
 import { useRouter } from "next/navigation";
 import RoomDetailCard from "./components/RoomDetail";
@@ -12,6 +16,7 @@ import api from "@/lib/api";
 import { App } from "antd";
 import { IRoom } from "@/types/room.type";
 import { IDiscount, IDiscountRoomResponse } from "@/types/discount.type";
+import { Booking } from '../../../../../backend/src/models/booking.model';
 export default function BookingConfirmationPage() {
   const router = useRouter();
   const { message } = App.useApp();
@@ -19,11 +24,11 @@ export default function BookingConfirmationPage() {
   const [selectedVoucher, setSelectedVoucher] = useState<IDiscount | null>(
     null
   );
-  const [bookingInfo] = useSessionStorage<SessionBookingInfo | null>("bookingInfo", null);
-  const [userInfo] = useSessionStorage<IBookingGuests | null>(
-    "userInfo",
+  const [bookingInfo] = useSessionStorage<SessionBookingInfo | null>(
+    "bookingInfo",
     null
   );
+  const [userInfo] = useSessionStorage<IBookingGuests | null>("userInfo", null);
 
   //State
   const [room, setRoom] = useState<IRoom | null>(null);
@@ -33,7 +38,7 @@ export default function BookingConfirmationPage() {
   // --- EFFECT 1: CHECK SESSION & REDIRECT ---
   useEffect(() => {
     if (!bookingInfo || !userInfo) {
-      console.warn("Thiếu thông tin, quay về trang booking...");
+      console.warn("Thiếu thông tin");
       router.push("/booking");
     }
   }, [bookingInfo, userInfo, router]);
@@ -76,54 +81,60 @@ export default function BookingConfirmationPage() {
   }, [bookingInfo]);
   const handleCancel = () => {
     console.log("Hủy Phòng clicked. Chuyển hướng người dùng về bước trước.");
-    router.push("/buildings/");
+    router.push("/");
   };
- const handleConfirm = async () => {
+  const handleConfirm = async () => {
     if (!bookingInfo || !userInfo) {
-      message.error("Thiếu thông tin đặt phòng! Quay về trang trước để điền lại thông tin");
+      message.error(
+        "Thiếu thông tin đặt phòng! Quay về trang trước để điền lại thông tin"
+      );
       return;
     }
     setIsProcessing(true);
 
     try {
-      // 1. Đảm bảo ngày tháng chuẩn ISO string
-      // LoopBack DateTime mặc định parse chuẩn ISO 8601
       const checkInISO = new Date(bookingInfo.checkIn).toISOString();
       const checkOutISO = new Date(bookingInfo.checkOut).toISOString();
 
-      // 2. Mapping đúng key mà Backend yêu cầu
-      // Backend: guests, Frontend state: userInfo
       const payload = {
         roomId: bookingInfo.roomId,
         checkIn: checkInISO,
         checkOut: checkOutISO,
-        guests: { 
+        guests: {
           name: userInfo.name,
           phone: userInfo.phone,
           email: userInfo.email,
           note: userInfo.note,
         },
         paymentMethod: userInfo.paymentMethod,
-        discountId: selectedVoucher ? (selectedVoucher._id || selectedVoucher.id) : undefined,
+        discountId: selectedVoucher
+          ? selectedVoucher._id || selectedVoucher.id
+          : undefined,
       };
 
-      console.log("Payload gửi đi:", payload); 
+      console.log("Payload gửi đi:", payload);
 
       const res = await api.post("/bookings", payload);
-      
+
       if (res.data) {
-        message.success("Đặt phòng thành công!");
-        sessionStorage.removeItem("bookingInfo");
-        sessionStorage.removeItem("userInfo");
-        sessionStorage.setItem("booking",res.data);
+        if (res.data.redirectUrl && payload.paymentMethod === "vnpay") {
+          console.log("Redirecting to:", res.data.redirectUrl);
+          window.location.href = res.data.redirectUrl;
+          return; 
+        }
+        message.success("Đặt phòng thành công!, bạn sẽ chuyển về trang thành công sau 2 giây");
+        // sessionStorage.removeItem("bookingInfo");
+        // sessionStorage.removeItem("userInfo");
+        sessionStorage.setItem("booking", JSON.stringify(res.data.Booking));
         setTimeout(() => {
-          router.push(`/booking/success`);
+          router.push(`/booking/cash-success`);
         }, 2000);
       }
     } catch (err: any) {
-      console.error("Chi tiết lỗi:", err.response?.data); 
-      
-      const serverMessage = err.response?.data?.error?.message || "Có lỗi xảy ra khi thanh toán";
+      console.error("Chi tiết lỗi:", err.response?.data);
+
+      const serverMessage =
+        err.response?.data?.error?.message || "Có lỗi xảy ra khi thanh toán";
       message.error(serverMessage);
     } finally {
       setIsProcessing(false);

@@ -5,7 +5,7 @@ import api from "@/lib/api";
 import { loginSuccess, logOut } from "@/store/slices/auth.slice";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { usePathname, useRouter } from "next/navigation";
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from "../../../components/LoadingScreen";
 import { App } from "antd";
 import { useEffect, useState } from "react";
 export default function AuthGuard({ children }: { children: React.ReactNode }) {

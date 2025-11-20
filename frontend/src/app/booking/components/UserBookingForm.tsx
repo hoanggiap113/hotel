@@ -24,7 +24,6 @@ export default function UserBookingForm({
   );
   const paymentMethods = [
     EPaymentMethod.CASH,
-    EPaymentMethod.BANK_TRANSFER,
     EPaymentMethod.VNPAY,
     EPaymentMethod.MOMO
   ];
@@ -33,6 +32,7 @@ export default function UserBookingForm({
     form.setFieldsValue({
       paymentMethod: selectedMethod,
     });
+    console.log(selectedMethod);
   }, [selectedMethod, form]);
 
   return (

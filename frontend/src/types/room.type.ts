@@ -28,29 +28,25 @@ export enum EAmenity {
   BATHTUB = "bathtub",
   POOL = "pool",
   PARKING = "parking",
-  // Bổ sung dựa trên data JSON
-  SHOWER = "shower",
   BALCONY = "balcony",
   KITCHENETTE = "kitchenette",
   LIVING_ROOM = "living_room",
-  HEATER = "heater",
-  FIREPLACE = "fireplace",
   PRIVATE_POOL = "private_pool",
-  AIR_CON = "air_con", // Thường dùng cho 'Điều hòa'
+  AIR_CON = "air_con",
 }
 
 // --- INTERFACES ---
 
 export interface IRoom {
-  id: string; // Frontend thường map _id thành id, hoặc dùng _id tùy logic của bạn
-  _id?: string; // Hỗ trợ cả _id từ Mongo
+  id: string; 
+  _id?: string;
   name: string;
   description?: string;
   images?: string[];
-  roomType: ERoomType | string; // Cho phép string lỏng lẻo để tránh lỗi crash nếu DB lạ
+  roomType: ERoomType | string; 
   bedType: EBedType | string;
   price: number;
-  amenities: (EAmenity | string)[]; // Cho phép string vì DB có thể lưu text tự do
+  amenities: (EAmenity | string)[]; 
   capacity: number;
   rating: {
     average: number;
@@ -108,12 +104,9 @@ export const AmenityLabel: Record<string, string> = {
   [EAmenity.BATHTUB]: "Bồn tắm",
   [EAmenity.POOL]: "Hồ bơi chung",
   [EAmenity.PARKING]: "Bãi gửi xe",
-  [EAmenity.SHOWER]: "Vòi hoa sen",
   [EAmenity.BALCONY]: "Ban công",
   [EAmenity.KITCHENETTE]: "Bếp nhỏ",
   [EAmenity.LIVING_ROOM]: "Phòng khách",
-  [EAmenity.HEATER]: "Máy sưởi",
-  [EAmenity.FIREPLACE]: "Lò sưởi",
   [EAmenity.PRIVATE_POOL]: "Hồ bơi riêng",
   [EAmenity.AIR_CON]: "Điều hòa",
 };

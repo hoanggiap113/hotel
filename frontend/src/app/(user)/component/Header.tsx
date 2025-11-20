@@ -6,7 +6,7 @@ export default function Header() {
   const navItems = [
     { name: "Home", href: "/" },
     { name: "Room", href: "/buildings" },
-    { name: "About", href: "/" },
+    { name: "About", href: "/" }, 
     { name: "Contact", href: "/" },
   ];
   return (
@@ -14,7 +14,7 @@ export default function Header() {
       <div className=" h-[60px] bg-white w-full shadow-sm">
         <div className="max-w-7xl mx-auto flex flex-row items-center justify-between px-8 h-full">
           <div className="flex items-center space-x-2">
-            <Link
+            <Link 
               href="/"
               className="flex items-center space-x-2 cursor-pointer"
             >

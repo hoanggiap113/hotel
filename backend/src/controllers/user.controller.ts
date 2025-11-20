@@ -2,9 +2,17 @@ import {inject} from '@loopback/core';
 import { UserService } from '../services'; 
 import { param, post, patch, get, del, response, requestBody, getModelSchemaRef } from '@loopback/rest';
 import { User } from '../models';
-import { Filter } from '@loopback/repository';
+import { Filter, repository } from '@loopback/repository';
+import { authenticate } from '@loopback/authentication';
+import { Booking } from '../models';
+import { BookingRepository } from '../repositories';
 export class UserController {
-  constructor(@inject('services.UserService') public userService : UserService) {};
+  constructor(
+    @inject('services.UserService') 
+    public userService : UserService,
+    @repository(BookingRepository) 
+    public bookingRepo: BookingRepository,
+  ) {};
 
   @get('/users')
   @response(200,{
@@ -22,5 +30,34 @@ export class UserController {
   })
   async getUser(@param.filter(User) filters? : Filter<User>): Promise<User[]>{
     return await this.userService.getUsers(filters);
+  }
+  @get('/users/{id}/orders')
+  @authenticate('jwt')
+  @response(200,{
+    description:'Lấy orders theo user',
+    content:{
+      'application/json': {
+        schema: getModelSchemaRef(Booking, {includeRelations : true})
+      },
+    },
+  })
+  async getOrdersByUser(
+    @param.path.string('id') id: string,
+    @param.query.string('status') status: string
+  ): Promise<Booking[]>{
+    try{
+      console.log(id);
+      console.log(status);
+      const bookings = await this.bookingRepo.find({
+        where: {
+          status: status,
+          userId: id
+        }
+      })
+      return bookings;
+    }catch(err){
+      console.error(err);
+      return [];
+    }
   }
 }

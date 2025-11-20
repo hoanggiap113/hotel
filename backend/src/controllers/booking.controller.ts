@@ -19,6 +19,8 @@ import {getModelSchemaRef} from '@loopback/rest';
 import {BookingRequestInterface} from '../interface/booking-request.interface';
 import {repository} from '@loopback/repository';
 import {BookingRepository} from '../repositories';
+import { authenticate } from '@loopback/authentication';
+import { SecurityBindings, UserProfile } from '@loopback/security';
 
 export class BookingController {
   constructor(
@@ -56,17 +58,20 @@ export class BookingController {
       const ipHeader = this.req.headers['x-forwarded-for'];
       let ipAddr = '';
       if (ipHeader) {
-        // Header có thể trả về dạng: "client_ip, proxy1_ip, proxy2_ip"
         ipAddr = Array.isArray(ipHeader) ? ipHeader[0] : ipHeader.split(',')[0];
       } else {
-        // Fallback nếu không có proxy
         ipAddr = this.req.socket.remoteAddress || '127.0.0.1';
       }
-      //Làm sạch ip nếu bẩn
+      if (ipAddr === '::1') {
+        ipAddr = '127.0.0.1';
+      }
       if (ipAddr.substr(0, 7) == '::ffff:') {
         ipAddr = ipAddr.substr(7);
       }
-      const result = await this.bookingService.createBooking(bookingData,ipAddr);
+      const result = await this.bookingService.createBooking(
+        bookingData,
+        ipAddr,
+      );
       return result;
     } catch (err) {
       throw HttpErrors.InternalServerError('Error creating booking');

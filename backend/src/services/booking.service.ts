@@ -53,7 +53,7 @@ export class BookingService {
       checkIn: new Date(bookingData.checkIn),
       checkOut: new Date(bookingData.checkOut),
       guests: bookingData.guests,
-      status: 'pending' ,
+      status: 'pending',
       pricing: breakDown,
       userId: bookingData.userId,
       createdAt: new Date(),
@@ -71,14 +71,11 @@ export class BookingService {
       let redirectUrl = undefined;
 
       if (bookingData.paymentMethod === 'vnpay') {
-        // Giả sử bạn cần IP Address, trong Service khó lấy trực tiếp req,
-        // tạm thời để mặc định hoặc truyền từ Controller xuống.
-
         redirectUrl = this.vnPayService.buildPaymentUrl(
           payment.amount,
-          clientIp,
-          payment.id!, // Quan trọng: Dùng ID Payment vừa tạo để làm TxnRef
-          `Thanh toan booking ${booking.id}`,
+          clientIp.toString(),
+          payment.id!.toString(),
+          `Thanh toan booking ${booking.id?.toString()}`,
         );
       }
       return {booking, redirectUrl};
@@ -166,7 +163,7 @@ export class BookingService {
       roomPrice: totalRoomPrice,
       tax: taxAmount,
       discount: discountAmount,
-      total: finalTotal,
+      total: Math.round(finalTotal),
     };
   }
 }
