@@ -1,7 +1,12 @@
 "use client";
 
 import { Card, Tag, Button, Typography, Space, Divider, Image } from "antd";
-import { CalendarOutlined, EnvironmentOutlined, HomeOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  EnvironmentOutlined,
+  HomeOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import { IBooking, EBookingStatus } from "@/types/booking.type";
 import formatDate from "@/lib/format-date";
 import formatLocation from "@/lib/format-address";
@@ -42,7 +47,9 @@ export default function BookingItem({ booking }: BookingItemProps) {
     }
   };
   return (
-    <Card hoverable className="mb-4 shadow-sm border-gray-200 transition-all">
+    <Card
+     className="rounded-none!"
+    >
       <div className="flex flex-col sm:flex-row gap-5">
         {/* --- CỘT TRÁI: ẢNH PHÒNG --- */}
         <div className="w-full sm:w-48 h-32 shrink-0 overflow-hidden rounded-lg border border-gray-100">
@@ -52,7 +59,7 @@ export default function BookingItem({ booking }: BookingItemProps) {
             className="object-cover w-full h-full"
             height="100%"
             width="100%"
-            preview={false} 
+            preview={false}
           />
         </div>
 
@@ -89,10 +96,14 @@ export default function BookingItem({ booking }: BookingItemProps) {
 
           {/* Thời gian check-in/out */}
           <div className="bg-blue-50 p-2 rounded text-xs text-gray-600 mt-3 inline-flex gap-3 border border-blue-100">
+            <CalendarOutlined />
+
             <span>
               Check-in: <b>{formatDate(booking.checkIn)}</b>
             </span>
             <Divider type="vertical" className="bg-blue-200 h-3 my-auto" />
+            <CalendarOutlined />
+
             <span>
               Check-out: <b>{formatDate(booking.checkOut)}</b>
             </span>

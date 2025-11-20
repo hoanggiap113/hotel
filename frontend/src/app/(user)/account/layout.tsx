@@ -1,8 +1,8 @@
 "use client";
 import { Poppins } from "next/font/google";
-import Header from "../component/Header";
-import AccountSidebar from "./components/Sidebar";
-import UserAuthGuard from "./components/AuthGuard";
+import Header from "../_components/Header";
+import AccountSidebar from "./_components/Sidebar";
+import UserAuthGuard from "./_components/AuthGuard";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],

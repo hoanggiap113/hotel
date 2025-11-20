@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { SidebarFilterState } from "@/types/room.type";
-import SidebarFilter from "../component/buildings/SidebarFIlters";
+import SidebarFilter from "../_components/buildings/SidebarFIlters";
 import { useState, useEffect } from "react";
 import { Spin } from "antd";
 import api from "@/lib/api";
 import SearchBarCompact from "./components/SearchBarCompact";
 import { IBuilding } from "@/types/building.type";
-import BuildingCard from "../component/buildings/BuildingCard";
+import BuildingCard from "../_components/buildings/BuildingCard";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 export default function RoomPage() {
   const [buildings, setBuildings] = useState<IBuilding[]>([]);

@@ -7,9 +7,9 @@ import { Spin } from "antd";
 import api from "@/lib/api";
 import { IBuildingDetail } from "@/types/building.type";
 import formatLocation from "@/lib/format-address";
-import PlaceSection from "../../component/PlaceSection";
+import PlaceSection from "../../_components/PlaceSection";
 import { useRouter } from "next/navigation";
-import AvailableRoomCard from "../../component/buildings/AvailableRoomCard";
+import AvailableRoomCard from "../../_components/buildings/AvailableRoomCard";
 export default function BuildingDetailPage() {
   const [building, setBuilding] = useState<IBuildingDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);

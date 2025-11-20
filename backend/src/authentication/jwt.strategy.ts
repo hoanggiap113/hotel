@@ -1,7 +1,7 @@
 import {AuthenticationStrategy} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {HttpErrors, RedirectRoute, Request} from '@loopback/rest';
-import {securityId,UserProfile} from '@loopback/security';
+import {securityId, UserProfile} from '@loopback/security';
 import {AuthService} from '../services';
 
 export class JWTAuthenticationStrategy implements AuthenticationStrategy {
@@ -25,16 +25,24 @@ export class JWTAuthenticationStrategy implements AuthenticationStrategy {
           'Token payload không phải là một object',
         );
       }
-       const userProfile: UserProfile = {
+      const userProfile: UserProfile = {
         [securityId]: userPayload.id,
         id: userPayload.id,
         roles: userPayload.roles,
       };
       return userProfile;
     } catch (err) {
-      throw new HttpErrors.Unauthorized(
-        `Lỗi khi xác nhận token ${err.message}`,
-      );
+      if (err.name === 'TokenExpiredError') {
+        throw new HttpErrors.Unauthorized(
+          'Token đã hết hạn. Vui lòng đăng nhập lại.',
+        );
+      }
+
+      if (err.name === 'JsonWebTokenError') {
+        throw new HttpErrors.Unauthorized('Token không hợp lệ.');
+      }
+
+      throw new HttpErrors.Unauthorized(`Lỗi xác thực: ${err.message}`);
     }
   }
 

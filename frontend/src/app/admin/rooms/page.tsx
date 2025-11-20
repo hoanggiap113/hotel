@@ -11,10 +11,10 @@ import formatLocation from "@/lib/format-address";
 import { useEffect, useState } from "react";
 import { Table, Button, App } from "antd";
 import { IRoom, RoomFilter } from "@/types/room.type";
-import RoomFilterModal from "../components/rooms/RoomFilterModel";
-import RoomTable from "../components/rooms/RoomTable";
+import RoomFilterModal from "../_components/rooms/RoomFilterModel";
+import RoomTable from "../_components/rooms/RoomTable";
 import { TRoomFormInput } from "@/types/room.type";
-import { RoomFormModal } from "../components/rooms/RoomFormModel";
+import { RoomFormModal } from "../_components/rooms/RoomFormModel";
 export default function UserPage() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);

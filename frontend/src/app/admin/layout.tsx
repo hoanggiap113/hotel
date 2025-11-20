@@ -1,8 +1,8 @@
 "use client"
 import React from 'react';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import AuthGuard from './components/AuthGuard';
+import Header from './_components/Header';
+import Sidebar from './_components/Sidebar';
+import AuthGuard from './_components/AuthGuard';
 export default function MainLayout({
   children,
 }: {

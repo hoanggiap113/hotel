@@ -5,7 +5,7 @@ import { Tabs, Card, Typography } from "antd";
 import type { TabsProps } from "antd";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 
-import BookingList from "./components/BookingList";
+import BookingList from "./_components/BookingList";
 import { EBookingStatus } from "@/types/booking.type";
 
 const { Title } = Typography;
@@ -14,8 +14,8 @@ export default function BookingPage() {
   // 1. Cấu hình danh sách các Tab
   const items: TabsProps["items"] = [
     {
-      key: "upcoming", 
-      label: "Sắp tới", 
+      key: "upcoming",
+      label: "Sắp tới",
       // Gọi BookingList và truyền status CONFIRMED
       children: <BookingList status={EBookingStatus.CONFIRMED} />,
     },
@@ -43,25 +43,22 @@ export default function BookingPage() {
       </Title>
 
       {/* Khung chứa Tabs - Style background trắng, bo góc, bóng đổ nhẹ */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[600px]">
-        {/* Component Tabs của Ant Design */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[600px] flex flex-col">
         <Tabs
           defaultActiveKey="upcoming"
           items={items}
           onChange={onChange}
-          size="large" 
+          size="large"
+          // Thêm flex-1 vào nội dung tab để nó chiếm hết khoảng trống còn lại
+          className="flex-1 flex flex-col [&>.ant-tabs-content]:flex-1 [&>.ant-tabs-content]:h-full"
           tabBarStyle={{
             padding: "0 24px",
             marginBottom: 0,
-            borderBottom: "1px solid #f0f0f0", 
+            borderBottom: "1px solid #f0f0f0",
           }}
           destroyOnHidden={true}
         />
 
-        {/* Phần nội dung bên dưới Tab (Children sẽ được render vào đây) */}
-        <div className="p-6 bg-gray-50/50 h-full">
-          {/* BookingList sẽ hiện ở đây */}
-        </div>
       </div>
     </div>
   );

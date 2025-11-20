@@ -1,11 +1,13 @@
 import {belongsTo, Entity, hasOne, model, property} from '@loopback/repository';
 import {Room} from './room.model';
 import {User} from './user.model';
-import { Payment } from './payment.model';
+import {Payment} from './payment.model';
 
-@model({settings: {
-  mongodb: {collection: "bookings"}
-}})
+@model({
+  settings: {
+    mongodb: {collection: 'bookings'},
+  },
+})
 export class Booking extends Entity {
   @property({
     type: 'string',
@@ -37,10 +39,10 @@ export class Booking extends Entity {
   })
   pricing: object;
   @property({
-    type:'object',
-    required:true
+    type: 'object',
+    required: true,
   })
-  guests: Object
+  guests: Object;
 
   @property({
     type: 'date',
@@ -52,22 +54,31 @@ export class Booking extends Entity {
   })
   updatedAt: Date;
 
-  @property({
-    type: 'string',
-    mongodb: {dataType: 'ObjectId'},
-  })
+  @belongsTo(
+    () => User,
+    {name: 'user'},
+    {
+      type: 'string',
+      mongodb: {dataType: 'ObjectId'},
+    },
+  )
   userId?: string;
-  @belongsTo(() => User)
-  user: User;
 
-  @property({
-    type: 'string',
-    required: true,
-    mongodb: {dataType: 'ObjectId'},
-  })
+  @belongsTo(
+    () => Room,
+    {name: 'room'},
+    {
+      type: 'string',
+      required: true,
+      mongodb: {dataType: 'ObjectId'},
+    },
+  )
   roomId: string;
-  @belongsTo(() => Room)
-  room: Room;
+
+
+  //Khai báo để intellisense gợi ý
+  room?: Room;
+  user?: User;
 
   @hasOne(() => Payment, {keyTo: 'bookingId'})
   payment: Payment;

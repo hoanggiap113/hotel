@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import SearchBar from "./component/SearchBar";
-import PlaceSection from "./component/PlaceSection";
+import SearchBar from "./_components/SearchBar";
+import PlaceSection from "./_components/PlaceSection";
 
 export default function HomePage() {
   const information = [

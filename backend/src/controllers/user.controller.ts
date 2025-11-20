@@ -6,6 +6,7 @@ import { Filter, repository } from '@loopback/repository';
 import { authenticate } from '@loopback/authentication';
 import { Booking } from '../models';
 import { BookingRepository } from '../repositories';
+import { SecurityBindings, UserProfile } from '@loopback/security';
 export class UserController {
   constructor(
     @inject('services.UserService') 
@@ -31,7 +32,7 @@ export class UserController {
   async getUser(@param.filter(User) filters? : Filter<User>): Promise<User[]>{
     return await this.userService.getUsers(filters);
   }
-  @get('/users/{id}/orders')
+  @get('/users/orders')
   @authenticate('jwt')
   @response(200,{
     description:'Lấy orders theo user',
@@ -42,17 +43,21 @@ export class UserController {
     },
   })
   async getOrdersByUser(
-    @param.path.string('id') id: string,
-    @param.query.string('status') status: string
+    @param.query.string('status') status: string,
+    @inject(SecurityBindings.USER)
+    currentUserProfile:UserProfile
   ): Promise<Booking[]>{
     try{
-      console.log(id);
-      console.log(status);
+      const userId = currentUserProfile.id;
       const bookings = await this.bookingRepo.find({
         where: {
           status: status,
-          userId: id
+          userId: userId
+        },
+        include: [{
+          relation: 'room'
         }
+        ]
       })
       return bookings;
     }catch(err){
