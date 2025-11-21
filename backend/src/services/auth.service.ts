@@ -1,5 +1,5 @@
 import jwt, {JwtPayload} from 'jsonwebtoken';
-import { UserPayload } from '../interface/userPayload';
+import { UserPayload } from '../models';
 import { HttpErrors } from '@loopback/rest';
 
 export class AuthService {

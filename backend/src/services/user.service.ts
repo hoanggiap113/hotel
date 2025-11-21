@@ -8,7 +8,7 @@ import {HashPasswordService} from '../util/hashpassword.util';
 import {AuthService} from './auth.service';
 import { SessionService } from './session.service';
 import { SessionRepository } from '../repositories';
-import { UserPayload } from '../interface/userPayload';
+import { UserPayload } from '../models';
 @injectable({scope: BindingScope.TRANSIENT})
 export class UserService {
   constructor(

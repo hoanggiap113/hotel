@@ -1,7 +1,7 @@
 import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
-import {Building} from './building.model';
-import { Discount } from './discount.model';
-import { DiscountRoom } from './discount-room.model';
+import {Building} from './building/building.model';
+import { Discount } from './discount/discount.model';
+import { DiscountRoom } from './discount/discount-room.model';
 
 @model({
   settings: {
@@ -112,3 +112,17 @@ export interface RoomRelations {
 }
 
 export type RoomWithRelations = Room & RoomRelations;
+
+//Custom interface/type
+
+export type RoomFilter = Pick<Room, 'name' | 'roomType' | 'bedType' | 'location' | 'amenities'  | 'capacity'> & {
+  priceTo: number;
+  priceFrom: number;
+  location: Location
+};
+
+export type Location = {
+  city?: string,
+  ward?:string,
+  address?:string
+}

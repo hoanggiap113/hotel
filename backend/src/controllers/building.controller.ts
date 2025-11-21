@@ -9,8 +9,8 @@ import {
   param,
   response,
 } from '@loopback/rest';
-import {SearchFilter} from '../interface/search-filter';
-import {BuildingResponseResult} from '../interface/response/building-response.model';
+import { BuildingFilter } from '../models';
+import { BuildingResponse } from '../models';
 export class BuildingController {
   constructor(
     @inject('services.BuildingService')
@@ -24,14 +24,14 @@ export class BuildingController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(BuildingResponseResult, {
+          items: getModelSchemaRef(BuildingResponse, {
             includeRelations: true,
           }),
         },
       },
     },
   })
-  async getBuildings(@param.query.object('filter') filterQuery: SearchFilter) {
+  async getBuildings(@param.query.object('filter') filterQuery: BuildingFilter) {
     try {
       const buildings = await this.buildingService.getBuilding(filterQuery);
       return buildings;
@@ -45,7 +45,7 @@ export class BuildingController {
     description: 'Building model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(BuildingResponseResult, {includeRelations: true}),
+        schema: getModelSchemaRef(BuildingResponse, {includeRelations: true}),
       },
     },
   })

@@ -13,10 +13,9 @@ import {
   response,
   
 } from '@loopback/rest';
-import {Room} from '../models';
+import {Room, RoomFilter} from '../models';
 import {RoomService} from '../services';
 import {inject} from '@loopback/core';
-import RoomFilter from '../interface/roomFilter';
 import { repository } from '@loopback/repository';
 import { RoomRepository } from '../repositories';
 
@@ -48,8 +47,6 @@ export class RoomController {
         priceFrom: {type: 'number'},
         priceTo: {type: 'number'},
         amenities: {type: 'array', items: {type: 'string'}},
-        capacityFrom: {type: 'number'},
-        capacityTo: {type: 'number'},
         location: {
           type: 'object',
           properties: {
@@ -58,8 +55,6 @@ export class RoomController {
             address: {type: 'string'},
           },
         },
-        checkIn: {type: 'string', format: 'date-time'},
-        checkOut: {type: 'string', format: 'date-time'},
       },
     })
     roomFilter?: RoomFilter,

@@ -1,7 +1,6 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
 import { DiscountRoom } from './discount-room.model';
-import { Room } from './room.model';
-
+import { Room } from '../room.model';
 @model({
   settings: {
     mongodb: {collection: 'discounts'},

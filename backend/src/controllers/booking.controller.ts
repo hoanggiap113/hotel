@@ -16,11 +16,10 @@ import {
 } from '@loopback/rest';
 import {Booking} from '../models';
 import {getModelSchemaRef} from '@loopback/rest';
-import {BookingRequestInterface} from '../interface/booking-request.interface';
+import { BookingRequestInterface } from '../models';
 import {repository} from '@loopback/repository';
 import {BookingRepository} from '../repositories';
-import { authenticate } from '@loopback/authentication';
-import { SecurityBindings, UserProfile } from '@loopback/security';
+
 
 export class BookingController {
   constructor(

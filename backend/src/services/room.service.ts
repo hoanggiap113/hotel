@@ -1,10 +1,10 @@
 import {injectable, BindingScope} from '@loopback/core';
-import {Room} from '../models';
+import {Room, RoomFilter} from '../models';
 import {repository} from '@loopback/repository';
 import {RoomRepository} from '../repositories/room.repository';
 import {Filter} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
-import RoomFilter from '../interface/roomFilter';
+import { BuildingFilter } from '../models';
 import {BookingRepository} from '../repositories/booking.repository';
 @injectable({scope: BindingScope.TRANSIENT})
 export class RoomService {
@@ -17,21 +17,6 @@ export class RoomService {
 
   async getRooms(roomFilter?: RoomFilter): Promise<Room[]> {
     const where = this.handleAdvanceQuery(roomFilter);
-    if (roomFilter?.checkIn && roomFilter?.checkOut) {
-      const checkIn = new Date(roomFilter.checkIn);
-      const checkOut = new Date(roomFilter.checkOut);
-
-      const bookedRoom = await this.bookingRepository.find({
-        where: {
-          and: [{checkIn: {lt: checkOut}}, {checkOut: {gt: checkIn}}],
-        },
-        fields: {roomId: true},
-      });
-      const bookRoomIds = bookedRoom.map(b => b.roomId);
-      if(bookRoomIds.length > 0){
-        where.id = {nin: bookRoomIds};
-      }
-    }
     const queryFilter: Filter<Room> = {
       where,
       order: ['createdAt DESC'],
@@ -122,13 +107,6 @@ export class RoomService {
       if (queryFilter.priceFrom) where.price.gte = queryFilter.priceFrom;
       if (queryFilter.priceTo) where.price.lte = queryFilter.priceTo;
     }
-    if (queryFilter?.capacityFrom || queryFilter?.capacityTo) {
-      where.capacity = {};
-      if (queryFilter.capacityFrom)
-        where.capacity.gte = queryFilter.capacityFrom;
-      if (queryFilter.capacityTo) where.capacity.lte = queryFilter.capacityTo;
-    }
-
     if (queryFilter?.amenities?.length) {
       where.amenities = {inq: queryFilter.amenities};
     }

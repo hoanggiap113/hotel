@@ -1,7 +1,7 @@
 import {Getter, inject} from '@loopback/core';
 import {BelongsToAccessor, DefaultCrudRepository, repository} from '@loopback/repository';
-import {AgendaDataSource} from '../datasources';
-import {Discount, DiscountRoom, DiscountRoomRelations} from '../models';
+import {AgendaDataSource} from '../../datasources';
+import {Discount, DiscountRoom, DiscountRoomRelations} from '../../models';
 import { DiscountRepository } from './discount.repository';
 
 export class DiscountRoomRepository extends DefaultCrudRepository<

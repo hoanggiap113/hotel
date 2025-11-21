@@ -4,5 +4,5 @@ export * from './booking.repository';
 export * from './session.repository';
 export * from './building.repository';
 export * from './payment.repository';
-export * from './discount.repository';
-export * from './discount-room.repository';
+export * from './discountRepo/discount.repository';
+export * from './discountRepo/discount-room.repository';

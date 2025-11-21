@@ -1,12 +1,12 @@
 import {Where} from '@loopback/repository';
-import {SearchFilter} from '../interface/search-filter';
-import {Room} from '../models';
 
+import {Room} from '../models';
+import { BuildingFilter } from '../models';
 /**
  * Helper: Xây dựng mệnh đề 'where' cho Room
  */
 export function buildRoomWhere(
-  filters: SearchFilter,
+  filters: BuildingFilter,
   conflictingRoomIds: string[],
 ): Where<Room> {
   const roomWhere: Where<Room> = {};

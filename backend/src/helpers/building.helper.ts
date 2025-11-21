@@ -1,7 +1,7 @@
-import { SearchFilter } from "../interface/search-filter";
+import { BuildingFilter } from "../models";
 
   export function buildBuildingWhere(
-    filters: SearchFilter,
+    filters: BuildingFilter,
     availableBuildingIds: string[],
   ): any { 
     

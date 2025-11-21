@@ -1,6 +1,6 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
 import {Discount} from './discount.model';
-import {Room} from './room.model';
+import {Room} from '../room.model';
 
 @model({
   settings: {

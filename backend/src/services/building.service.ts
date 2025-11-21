@@ -5,18 +5,19 @@ import {
   RoomRepository,
   BookingRepository,
 } from '../repositories';
-import {Booking, Building, Room} from '../models';
-import {SearchFilter} from '../interface/search-filter';
+import {
+  Booking,
+  BuildingFilter,
+  Room,
+  BuildingWithMinPrice,
+  BuildingDetail,
+} from '../models';
 import {buildRoomWhere} from '../helpers/room.helper';
 import {buildBuildingWhere} from '../helpers/building.helper';
 import {filter} from 'lodash';
 import {HttpErrors} from '@loopback/rest';
 // Kiểu trả về tùy chỉnh
-type BuildingWithMinPrice = Building & {price: number};
-type BuildingDetail = {
-  building: Building;
-  rooms: Room[];
-}
+
 @injectable({scope: BindingScope.TRANSIENT})
 export class BuildingService {
   constructor(
@@ -29,7 +30,7 @@ export class BuildingService {
    * Tìm kiếm tòa nhà bằng cách dùng nhiều hàm 'find' và 'where'.
    */
   async getBuilding(
-    filtersParams: SearchFilter,
+    filtersParams: BuildingFilter,
   ): Promise<BuildingWithMinPrice[]> {
     const conflictingRoomIds = await this.getConflictingRoomIds(
       filtersParams.checkIn,
@@ -104,13 +105,13 @@ export class BuildingService {
     }
     roomWhere.buildingId = building.id;
     const rooms = await this.roomRepo.find({
-      where: roomWhere
-    })
+      where: roomWhere,
+    });
 
     return {
       building: building,
-      rooms: rooms
-    }
+      rooms: rooms,
+    };
   }
   //Lấy danh sách roomId bị bị book trong khoảng thời gian đã cho
   private async getConflictingRoomIds(

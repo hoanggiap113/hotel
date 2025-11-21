@@ -9,7 +9,7 @@ import {
 import {repository} from '@loopback/repository';
 import {Filter} from '@loopback/repository';
 import {Booking, DiscountRoom} from '../models';
-import {BookingRequestInterface} from '../interface/booking-request.interface';
+import { BookingRequestInterface } from '../models';
 import {PaymentRepository} from '../repositories/payment.repository';
 import {HttpErrors} from '@loopback/rest';
 import {calculateDate} from '../util/calculateDate.util';

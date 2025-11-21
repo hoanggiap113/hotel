@@ -10,7 +10,7 @@ import {AgendaDataSource} from '../datasources';
 import {Booking, BookingRelations, Payment, Room, User} from '../models';
 import {RoomRepository} from './room.repository';
 import {UserRepository} from './user.repository';
-import {BookingRequestInterface} from '../interface/booking-request.interface';
+import { BookingRequestInterface } from '../models';
 import {PaymentRepository} from './payment.repository';
 export class BookingRepository extends DefaultCrudRepository<
   Booking,

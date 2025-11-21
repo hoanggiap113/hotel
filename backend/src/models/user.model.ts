@@ -1,5 +1,5 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
-import { Building } from './building.model';
+import { Building } from './building/building.model';
 
 @model({
   settings: {
@@ -64,3 +64,5 @@ export interface UserRelations {
 }
 
 export type UserWithRelations = User & UserRelations;
+
+export type UserPayload = Pick<User, "id" | "roles">
