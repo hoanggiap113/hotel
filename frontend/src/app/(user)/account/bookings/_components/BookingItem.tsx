@@ -8,10 +8,10 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import { IBooking, EBookingStatus } from "@/types/booking.type";
-import formatDate from "@/lib/format-date";
-import formatLocation from "@/lib/format-address";
+import formatDate from "@/lib/util/format-date";
+import formatLocation from "@/lib/util/format-address";
 import { BedTypeLabel, RoomTypeLabel } from "@/types/room.type";
-import formatPrice from "@/lib/format-price";
+import formatPrice from "@/lib/util/format-price";
 const { Text, Title } = Typography;
 interface BookingItemProps {
   booking: IBooking;

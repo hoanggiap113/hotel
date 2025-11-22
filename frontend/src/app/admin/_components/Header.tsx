@@ -3,7 +3,7 @@ import { SettingOutlined, BellFilled, LogoutOutlined } from "@ant-design/icons";
 import { logOut } from "@/store/slices/auth.slice";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { User } from "@/types/user.type";
-import api from "@/lib/api";
+import api from "@/lib/util/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { message } from "antd";

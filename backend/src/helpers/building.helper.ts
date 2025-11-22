@@ -1,24 +1,46 @@
-import { BuildingFilter } from "../models";
+import {BuildingFilter} from '../models';
 
-  export function buildBuildingWhere(
-    filters: BuildingFilter,
-    availableBuildingIds: string[],
-  ): any { 
-    
-    const buildingWhere: any = {
-      id: {inq: availableBuildingIds}, 
+export default function buildBuildingWhere(
+  filters: BuildingFilter,
+  availableBuildingIds: string[],
+): any {
+  const buildingWhere: any = {
+    id: {inq: availableBuildingIds},
+  };
+
+  // Filter theo tên building
+  if (filters.buildingName) {
+    buildingWhere.name = {
+      like: filters.buildingName,
+      options: 'i', // case-insensitive
     };
+  }
 
-    filters.buildingName &&
-      (buildingWhere.name = {like: `%${filters.buildingName}%`});
+  // Filter theo location (city, ward, address)
+  if (filters.location) {
+    const {city, ward, address} = filters.location;
 
-    if (filters.location) {
-      const {city, ward, address} = filters.location;
-      console.log('Filters location:', filters.location);
-      city && (buildingWhere['location.city'] = {like: city});
-      ward && (buildingWhere['location.ward'] = {like: ward});
-      address && (buildingWhere['location.address'] = {like: address});
+    if (city) {
+      buildingWhere['location.city'] = {
+        like: city,
+        options: 'i',
+      };
     }
 
-    return buildingWhere;
+    if (ward) {
+      buildingWhere['location.ward'] = {
+        like: ward,
+        options: 'i',
+      };
+    }
+
+    if (address) {
+      buildingWhere['location.address'] = {
+        like: address,
+        options: 'i',
+      };
+    }
   }
+
+  return buildingWhere;
+}

@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-"use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, Select, Checkbox, Slider, Button, Space, Divider } from "antd";
 import {
   ERoomType,
@@ -16,27 +14,69 @@ import {
   CityOptions,
 } from "@/types/room.type";
 import { FilterOutlined, ReloadOutlined } from "@ant-design/icons";
-import formatPrice from "@/lib/format-price";
-export default function SidebarFilter({
-  onFilterChange,
-}: {
+import formatPrice from "@/lib/util/format-price";
+
+interface SidebarProps {
+  initialValues?: SidebarFilterState;
   onFilterChange?: (filter: SidebarFilterState) => void;
-}) {
-  const [filters, setFilters] = useState<SidebarFilterState>({
+}
+
+export default function SidebarFilter({
+  initialValues,
+  onFilterChange,
+}: SidebarProps) {
+  const defaultState: SidebarFilterState = {
     priceFrom: 0,
     priceTo: 5000000,
-  });
+    city: undefined,
+    roomType: undefined,
+    bedType: undefined,
+    amenities: [],
+  };
+
+  const [filters, setFilters] = useState<SidebarFilterState>(defaultState);
+
+  useEffect(() => {
+    if (initialValues) {
+      setFilters((prev) => ({
+        ...prev,
+        ...initialValues,
+        priceFrom: initialValues.priceFrom ?? 0,
+        priceTo: initialValues.priceTo ?? 5000000,
+      }));
+    }
+  }, [initialValues]);
 
   const handleChange = (key: keyof SidebarFilterState, value: any) => {
-    const updated = { ...filters, [key]: value };
+    const newValue = value === null ? undefined : value;
+
+    const updated = { ...filters, [key]: newValue };
     setFilters(updated);
     onFilterChange?.(updated);
   };
 
+  const handleApply = () => {
+    onFilterChange?.(filters);
+  };
+
   const handleReset = () => {
-    const reset = { priceFrom: 0, priceTo: 5000000 };
-    setFilters(reset);
-    onFilterChange?.(reset);
+    setFilters(defaultState);
+    onFilterChange?.(defaultState);
+  };
+  const handleSliderChange = (value: number[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      priceFrom: value[0],
+      priceTo: value[1],
+    }));
+  };
+  const handleSliderAfterChange = (value: number[]) => {
+    const updated = {
+      ...filters,
+      priceFrom: value[0],
+      priceTo: value[1],
+    };
+    onFilterChange?.(updated);
   };
 
   return (
@@ -47,7 +87,7 @@ export default function SidebarFilter({
           <span>Bộ lọc phổ biến</span>
         </Space>
       }
-      className="w-full md:w-80"
+      className="w-full md:w-80 h-fit" // Thêm h-fit để không bị dài quá
     >
       {/* Khu vực */}
       <div className="mb-4">
@@ -56,6 +96,7 @@ export default function SidebarFilter({
           placeholder="Chọn khu vực"
           className="w-full"
           options={CityOptions}
+          value={filters.city} // 👈 QUAN TRỌNG: Phải bind value
           onChange={(v) => handleChange("city", v)}
           allowClear
         />
@@ -67,6 +108,7 @@ export default function SidebarFilter({
         <Select
           placeholder="Chọn loại phòng"
           className="w-full"
+          value={filters.roomType} // 👈 QUAN TRỌNG
           options={Object.values(ERoomType).map((v) => ({
             label: RoomTypeLabel[v],
             value: v,
@@ -82,6 +124,7 @@ export default function SidebarFilter({
         <Select
           placeholder="Chọn loại giường"
           className="w-full"
+          value={filters.bedType} // 👈 QUAN TRỌNG
           options={Object.values(EBedType).map((v) => ({
             label: BedTypeLabel[v],
             value: v,
@@ -95,6 +138,7 @@ export default function SidebarFilter({
       <div className="mb-4">
         <p className="font-medium mb-2">Tiện nghi</p>
         <Checkbox.Group
+          value={filters.amenities} // 👈 QUAN TRỌNG
           options={Object.values(EAmenity).map((v) => ({
             label: AmenityLabel[v],
             value: v,
@@ -118,9 +162,7 @@ export default function SidebarFilter({
           min={0}
           max={10000000}
           step={500000}
-          //Dùng value thay vì defaultValue để Slider
-          // được kiểm soát bởi state `filters`, giúp nó đồng bộ với giá trị hiển thị bên trên.
-          value={[filters.priceFrom!, filters.priceTo!]}
+          value={[filters.priceFrom ?? 0, filters.priceTo ?? 5000000]}
           onChange={(v) => {
             const updated = {
               ...filters,
@@ -128,7 +170,6 @@ export default function SidebarFilter({
               priceTo: v[1],
             };
             setFilters(updated);
-            onFilterChange?.(updated);
           }}
           tooltip={{
             formatter: (v) => v?.toLocaleString("vi-VN") + " ₫",
@@ -142,7 +183,7 @@ export default function SidebarFilter({
         <Button icon={<ReloadOutlined />} onClick={handleReset}>
           Đặt lại
         </Button>
-        <Button type="primary" onClick={() => onFilterChange?.(filters)}>
+        <Button type="primary" onClick={handleApply}>
           Áp dụng
         </Button>
       </div>

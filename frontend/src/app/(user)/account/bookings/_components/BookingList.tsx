@@ -7,7 +7,7 @@ import BookingItem from "./BookingItem";
 import { IBooking, EBookingStatus } from "@/types/booking.type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import api from "@/lib/api";
+import api from "@/lib/util/api";
 interface BookingListProps {
   status: EBookingStatus;
 }

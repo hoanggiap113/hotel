@@ -38,15 +38,15 @@ export enum EAmenity {
 // --- INTERFACES ---
 
 export interface IRoom {
-  id: string; 
+  id: string;
   _id?: string;
   name: string;
   description?: string;
   images?: string[];
-  roomType: ERoomType | string; 
+  roomType: ERoomType | string;
   bedType: EBedType | string;
   price: number;
-  amenities: (EAmenity | string)[]; 
+  amenities: (EAmenity | string)[];
   capacity: number;
   rating: {
     average: number;
@@ -75,6 +75,11 @@ export interface SidebarFilterState {
   amenities?: EAmenity[];
 }
 
+export interface BuildingFilter extends SidebarFilterState {
+  checkIn?: string;
+  checkOut?: string ;
+  capacity?: number;
+}
 // --- LABELS (MAPPING) ---
 
 // Sử dụng Record<string, string> để an toàn hơn khi key không nằm trong Enum

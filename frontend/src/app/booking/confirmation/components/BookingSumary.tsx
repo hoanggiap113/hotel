@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { SessionBookingInfo } from "@/types/booking.type";
-import { calculateNights, formatDateDisplay } from "@/lib/calculateNight";
-import formatPrice from "@/lib/format-price";
+import { calculateNights, formatDateDisplay } from "@/lib/util/calculateNight";
+import formatPrice from "@/lib/util/format-price";
 import { IDiscount } from "@/types/discount.type";
 import { Select } from "antd";
 interface BookingSummaryCardProps {

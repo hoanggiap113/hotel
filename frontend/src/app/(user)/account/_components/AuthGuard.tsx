@@ -1,11 +1,11 @@
 "use client";
-import api from "@/lib/api";
+import api from "@/lib/util/api";
 import { loginSuccess } from "@/store/slices/auth.slice";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { useRouter } from "next/navigation";
 
-import LoadingScreen from "@/components/LoadingScreen";
+import LoadingScreen from "@/common/components/LoadingScreen";
 import { App, message } from "antd";
 import { useEffect, useState } from "react";
 

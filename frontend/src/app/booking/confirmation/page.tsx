@@ -12,7 +12,7 @@ import RoomDetailCard from "./components/RoomDetail";
 import GuestInfoCard from "./components/GuestInfo";
 import BookingSummaryCard from "./components/BookingSumary";
 import ProgressBar from "./components/ProgressBar";
-import api from "@/lib/api";
+import api from "@/lib/util/api";
 import { App } from "antd";
 import { IRoom } from "@/types/room.type";
 import { IDiscount, IDiscountRoomResponse } from "@/types/discount.type";

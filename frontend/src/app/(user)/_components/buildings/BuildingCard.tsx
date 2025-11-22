@@ -3,8 +3,8 @@
 import { IBuilding } from "@/types/building.type";
 import Link from "next/link";
 import Image from "next/image";
-import formatLocation from "@/lib/format-address";
-import formatPrice from "@/lib/format-price";
+import formatLocation from "@/lib/util/format-address";
+import formatPrice from "@/lib/util/format-price";
 
 interface BuildingCardProps {
   building: IBuilding;

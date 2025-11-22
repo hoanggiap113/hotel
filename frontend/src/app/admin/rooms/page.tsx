@@ -5,9 +5,9 @@ import {
   SearchOutlined,
   FilterOutlined,
 } from "@ant-design/icons";
-import api from "@/lib/api";
-import formatDate from "@/lib/format-date";
-import formatLocation from "@/lib/format-address";
+import api from "@/lib/util/api";
+import formatDate from "@/lib/util/format-date";
+import formatLocation from "@/lib/util/format-address";
 import { useEffect, useState } from "react";
 import { Table, Button, App } from "antd";
 import { IRoom, RoomFilter } from "@/types/room.type";

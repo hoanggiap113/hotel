@@ -33,6 +33,7 @@ export class BuildingController {
   })
   async getBuildings(@param.query.object('filter') filterQuery: BuildingFilter) {
     try {
+      console.log(filterQuery);
       const buildings = await this.buildingService.getBuilding(filterQuery);
       return buildings;
     } catch (err) {

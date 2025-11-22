@@ -12,10 +12,10 @@ import {
   BuildingWithMinPrice,
   BuildingDetail,
 } from '../models';
-import {buildRoomWhere} from '../helpers/room.helper';
-import {buildBuildingWhere} from '../helpers/building.helper';
 import {filter} from 'lodash';
 import {HttpErrors} from '@loopback/rest';
+import buildRoomWhere from '../helpers/room.helper';
+import buildBuildingWhere from '../helpers/building.helper';
 // Kiểu trả về tùy chỉnh
 
 @injectable({scope: BindingScope.TRANSIENT})
@@ -26,60 +26,62 @@ export class BuildingService {
     @repository(BookingRepository) private bookingRepo: BookingRepository, // <-- Inject
   ) {}
 
-  /**
-   * Tìm kiếm tòa nhà bằng cách dùng nhiều hàm 'find' và 'where'.
-   */
   async getBuilding(
     filtersParams: BuildingFilter,
   ): Promise<BuildingWithMinPrice[]> {
+
     const conflictingRoomIds = await this.getConflictingRoomIds(
       filtersParams.checkIn,
       filtersParams.checkOut,
     );
+    console.log('Conflicting rooms:', conflictingRoomIds.length);
 
-    //Build query cho Room và tìm phòng hợp lệ
     const roomWhere = buildRoomWhere(filtersParams, conflictingRoomIds);
+
     const availableRooms = await this.roomRepo.find({
       where: roomWhere,
       fields: ['id', 'buildingId', 'price'],
     });
+    console.log('Available rooms:', availableRooms.length);
 
     if (availableRooms.length === 0) {
-      return []; // Không có phòng nào, dừng sớm
+      return []; 
     }
 
-    // BƯỚC 3: Build query cho Building và tìm tòa nhà
     const availableBuildingIds = [
-      ...new Set(availableRooms.map(r => r.buildingId)),
+      ...new Set(availableRooms.map(r => r.buildingId.toString())),
     ];
     const buildingWhere = buildBuildingWhere(
       filtersParams,
       availableBuildingIds,
     );
+
     const finalBuildings = await this.buildingRepo.find({
       where: buildingWhere,
     });
+    console.log('Final buildings:', finalBuildings.length);
 
-    // BƯỚC 4: Gắn giá phòng thấp nhất vào từng tòa nhà và sắp xếp nếu cần
     const result = finalBuildings.map(building => {
       const roomsOfThisBuilding = availableRooms.filter(
         r => r.buildingId.toString() === building.id?.toString(),
       );
+
       const prices = roomsOfThisBuilding
         .map(r => r.price)
-        .filter(p => typeof p === 'number');
-      const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+        .filter((p): p is number => typeof p === 'number');
 
+      const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
       return {
         ...building.toJSON(),
         price: minPrice,
       } as BuildingWithMinPrice;
     });
 
-    filtersParams.sort === 'price_asc' &&
+    if (filtersParams.sort === 'price_asc') {
       result.sort((a, b) => a.price - b.price);
-    filtersParams.sort === 'price_desc' &&
+    } else if (filtersParams.sort === 'price_desc') {
       result.sort((a, b) => b.price - a.price);
+    }
 
     return result;
   }
@@ -96,7 +98,6 @@ export class BuildingService {
     const conflictingRoomIds = await this.getConflictingRoomIds(
       checkIn,
       checkOut,
-      building.id,
     );
     console.log(conflictingRoomIds);
     const roomWhere: Where<Room> = {};
@@ -113,44 +114,34 @@ export class BuildingService {
       rooms: rooms,
     };
   }
-  //Lấy danh sách roomId bị bị book trong khoảng thời gian đã cho
   private async getConflictingRoomIds(
-    checkInStr: string,
-    checkOutStr: string,
-    buildingId?: string,
-  ): Promise<string[]> {
-    if (!checkInStr || !checkOutStr) {
-      return [];
-    }
-    const checkIn = new Date(checkInStr);
-    const checkOut = new Date(checkOutStr);
-
-    if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
-      return [];
-    }
-
-    const whereBooking: Where<Booking> = {
-      and: [
-        {status: {neq: 'cancelled'}},
-        {checkIn: {lt: checkOut}},
-        {checkOut: {gt: checkIn}},
-      ],
-    };
-    if (buildingId) {
-      const roomsInBuilding = await this.roomRepo.find({
-        where: {buildingId: buildingId},
-        fields: ['id'],
-      });
-      const roomIds = roomsInBuilding.map(r => r.id);
-      if (roomIds.length < 0) {
-        return [];
-      }
-      (whereBooking as any).roomId = {inq: roomIds};
-    }
-    const conflictedRoom = await this.bookingRepo.find({
-      where: whereBooking,
-      fields: {roomId: true},
-    });
-    return [...new Set(conflictedRoom.map(b => b.roomId))];
+  checkInStr: string,
+  checkOutStr: string,
+): Promise<string[]> {
+  if (!checkInStr || !checkOutStr) {
+    return [];
   }
+
+  const checkIn = new Date(checkInStr);
+  const checkOut = new Date(checkOutStr);
+
+  if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
+    return [];
+  }
+
+  const whereBooking: Where<Booking> = {
+    and: [
+      { status: { neq: 'cancelled' } },
+      { checkIn: { lt: checkOut } },
+      { checkOut: { gt: checkIn } },
+    ],
+  };
+
+  const conflictedBookings = await this.bookingRepo.find({
+    where: whereBooking,
+    fields: { roomId: true },
+  });
+
+  return [...new Set(conflictedBookings.map(b => b.roomId))];
+}
 }

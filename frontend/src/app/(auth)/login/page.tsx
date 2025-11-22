@@ -10,7 +10,7 @@ import {
   FacebookFilled,
 } from "@ant-design/icons";
 import Link from "next/link";
-import api from "@/lib/api";
+import api from "@/lib/util/api";
 import { useAppDispatch } from "@/hooks/reduxHooks";
 import { loginSuccess } from "@/store/slices/auth.slice";
 import { useRouter } from "next/navigation";

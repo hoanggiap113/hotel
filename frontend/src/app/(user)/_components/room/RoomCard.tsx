@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AmenityLabel, IRoom } from "@/types/room.type";
-import formatLocation from "@/lib/format-address";
-import formatPrice from "@/lib/format-price";
+import formatLocation from "@/lib/util/format-address";
+import formatPrice from "@/lib/util/format-price";
 interface RoomCardProps {
   room: IRoom;
 }

@@ -13,7 +13,7 @@ import {
   Upload,
   App,
 } from "antd";
-import api from "@/lib/api";
+import api from "@/lib/util/api";
 import { AMENITY_OPTIONS, ROOMTYPE_OPTIONS, BEDTYPE_OPTIONS } from "./constant";
 import { PlusOutlined } from "@ant-design/icons";
 import type { UploadFile } from "antd/es/upload/interface";

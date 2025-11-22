@@ -7,7 +7,7 @@ import {
 } from '@loopback/repository';
 import {Room} from '../room.model';
 import {User} from '../user.model';
-import { Location } from '../room.model';
+import {Location} from '../room.model';
 @model({
   settings: {
     mongodb: {collection: 'buildings'},
@@ -122,7 +122,7 @@ export type BuildingDetail = {
 
 export interface BuildingFilter {
   location?: Location;
-  name?:string
+  name?: string;
   checkIn: string;
   checkOut: string;
   capacity?: number;
@@ -142,7 +142,7 @@ export interface BuildingFilter {
 export class BuildingResponse extends Building {
   @property({
     type: 'number',
-    required: true, 
+    required: true,
   })
   minPrice: number;
 }

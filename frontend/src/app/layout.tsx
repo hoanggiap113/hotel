@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 // Đảm bảo đường dẫn này đúng
-import StyledComponentsRegistry from "@/lib/AntdRegistry"; 
-import StoreProvider from "./StoreProvider";
-import { App } from 'antd';
-import AntdMessageListener from "@/components/AntdMessageListener";
-
+import StyledComponentsRegistry from "@/lib/AntdRegistry";
+import StoreProvider from "@/store/StoreProvider";
+import { App } from "antd";
+import { AntdConfigProvider } from "@/providers/AntdConfigProvider";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 export const metadata: Metadata = {
   title: "Agenda",
   description: "Quản lý phòng",
@@ -19,12 +19,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <StyledComponentsRegistry>
-        <App>
-          <AntdMessageListener />
-          <StoreProvider> {children}</StoreProvider>
-          </App>
-        </StyledComponentsRegistry>
+        <ReactQueryProvider>
+          <StyledComponentsRegistry>
+            <AntdConfigProvider>
+              <App>
+                <StoreProvider> {children}</StoreProvider>
+              </App>
+            </AntdConfigProvider>
+          </StyledComponentsRegistry>
+        </ReactQueryProvider>
       </body>
     </html>
   );

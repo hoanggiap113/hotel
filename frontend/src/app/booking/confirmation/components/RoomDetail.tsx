@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import formatLocation from "@/lib/format-address";
+import formatLocation from "@/lib/util/format-address";
 import {
   IRoom,
   AmenityLabel,
