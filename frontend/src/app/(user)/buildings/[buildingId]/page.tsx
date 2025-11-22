@@ -1,66 +1,40 @@
 "use client";
 import Image from "next/image";
-import { AmenityData } from "@/types/amenity-icons";
 import { useParams, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
 import { Spin } from "antd";
-import api from "@/lib/util/api";
-import { IBuildingDetail } from "@/types/building.type";
 import formatLocation from "@/lib/util/format-address";
 import PlaceSection from "../../_components/PlaceSection";
 import { useRouter } from "next/navigation";
 import AvailableRoomCard from "../../_components/buildings/AvailableRoomCard";
+import { useBuildingDetail } from "@/hooks/queries/buildings/use-building";
 export default function BuildingDetailPage() {
-  const [building, setBuilding] = useState<IBuildingDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const searchParams = useSearchParams();
   const params = useParams();
-  const id = params.buildingId;
+  const id = params.buildingId?.toString() || "";
   const checkIn = searchParams.get("checkIn");
   const checkOut = searchParams.get("checkOut");
-  const router = useRouter();
-
+  const { data: building, isLoading } = useBuildingDetail({
+    id: id,
+    checkIn: checkIn!, 
+    checkOut: checkOut!,
+  });
   const handleOrderRoom = (roomId: string) => {
+    if (!checkIn || !checkOut) {
+      alert("Vui lòng chọn ngày check-in và check-out!");
+      return;
+    }
+
     const bookingInfo = {
       checkIn: checkIn,
       checkOut: checkOut,
       roomId: roomId,
     };
     sessionStorage.setItem("bookingInfo", JSON.stringify(bookingInfo));
-
     router.push(`/booking`);
   };
+  const router = useRouter();
 
-  useEffect(() => {
-    if (!id || !checkIn || !checkOut) {
-      setIsLoading(false);
-      console.error("Thiếu ID tòa nhà hoặc ngày check-in/check-out");
-      return;
-    }
-    const queryParams = new URLSearchParams();
-    queryParams.set("checkIn", checkIn);
-    queryParams.set("checkOut", checkOut);
 
-    const fetchBuildingDetail = async () => {
-      setIsLoading(true);
-      try {
-        const res = await api.get(`/buildings/${id}?${queryParams.toString()}`);
-        const apiResponse = res.data;
-        const formattedBuilding: IBuildingDetail = {
-          ...apiResponse.building,
-          rooms: apiResponse.rooms,
-        };
-        setBuilding(formattedBuilding);
-        console.log(res.data);
-      } catch (err) {
-        console.error("Lỗi:", err);
-        setBuilding(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchBuildingDetail();
-  }, [id, checkIn, checkOut]);
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
@@ -77,9 +51,6 @@ export default function BuildingDetailPage() {
     );
   }
 
-  // --- LOGIC HIỂN THỊ (ĐÃ SỬA) ---
-
-  // Lấy ảnh TÒA NHÀ
   const largeImage = building.images?.[0] ?? "/hero.jpg";
   const smallImages = building.images?.slice(1, 3) || [];
 

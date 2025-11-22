@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <>
       <div className=" h-[60px] bg-white w-full shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-row items-center justify-between px-8 h-full">
+        <div className="flex flex-row items-center justify-between px-10 h-full">
           <div className="flex items-center space-x-2">
             <Link 
               href="/"
@@ -35,13 +35,13 @@ export default function Header() {
             </Link>
           </div>
           {/* Menu */}
-          <nav className="flex flex-row items-center gap-6 text-gray-700 font-medium">
+          <nav className="flex justify-end items-center gap-6 font-medium ">
             {/* Menu chính */}
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="hover:text-blue-600 transition"
+                className="text-black hover:text-blue-600 transition"
               >
                 {item.name}
               </Link>

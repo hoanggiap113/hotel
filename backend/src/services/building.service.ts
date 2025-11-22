@@ -12,11 +12,9 @@ import {
   BuildingWithMinPrice,
   BuildingDetail,
 } from '../models';
-import {filter} from 'lodash';
 import {HttpErrors} from '@loopback/rest';
 import buildRoomWhere from '../helpers/room.helper';
 import buildBuildingWhere from '../helpers/building.helper';
-// Kiểu trả về tùy chỉnh
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class BuildingService {
@@ -26,7 +24,7 @@ export class BuildingService {
     @repository(BookingRepository) private bookingRepo: BookingRepository, // <-- Inject
   ) {}
 
-  async getBuilding(
+  async getBuildings(
     filtersParams: BuildingFilter,
   ): Promise<BuildingWithMinPrice[]> {
 
@@ -34,7 +32,6 @@ export class BuildingService {
       filtersParams.checkIn,
       filtersParams.checkOut,
     );
-    console.log('Conflicting rooms:', conflictingRoomIds.length);
 
     const roomWhere = buildRoomWhere(filtersParams, conflictingRoomIds);
 
@@ -55,11 +52,10 @@ export class BuildingService {
       filtersParams,
       availableBuildingIds,
     );
-
+    console.log(buildingWhere);
     const finalBuildings = await this.buildingRepo.find({
       where: buildingWhere,
     });
-    console.log('Final buildings:', finalBuildings.length);
 
     const result = finalBuildings.map(building => {
       const roomsOfThisBuilding = availableRooms.filter(
@@ -99,7 +95,6 @@ export class BuildingService {
       checkIn,
       checkOut,
     );
-    console.log(conflictingRoomIds);
     const roomWhere: Where<Room> = {};
     if (conflictingRoomIds.length > 0) {
       roomWhere.id = {nin: conflictingRoomIds};

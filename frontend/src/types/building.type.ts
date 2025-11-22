@@ -26,3 +26,8 @@ export interface IBuildingDetail{
   rooms: IRoom[]
   location: ILocation
 }
+export interface BuildingDetailRequest{
+  id:string,
+  checkIn:string,
+  checkOut:string
+}

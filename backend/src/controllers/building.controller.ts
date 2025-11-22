@@ -17,7 +17,7 @@ export class BuildingController {
     private buildingService: BuildingService,
   ) {}
 
-  @get('/buildings/search')
+  @get('/buildings')
   @response(200, {
     description: 'Array of Building model instances',
     content: {
@@ -33,8 +33,7 @@ export class BuildingController {
   })
   async getBuildings(@param.query.object('filter') filterQuery: BuildingFilter) {
     try {
-      console.log(filterQuery);
-      const buildings = await this.buildingService.getBuilding(filterQuery);
+      const buildings = await this.buildingService.getBuildings(filterQuery);
       return buildings;
     } catch (err) {
       console.log(err);

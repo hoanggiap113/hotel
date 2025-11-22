@@ -28,7 +28,7 @@ export default function SidebarFilter({
   const defaultState: SidebarFilterState = {
     priceFrom: 0,
     priceTo: 5000000,
-    city: undefined,
+    location: undefined,
     roomType: undefined,
     bedType: undefined,
     amenities: [],
@@ -70,15 +70,6 @@ export default function SidebarFilter({
       priceTo: value[1],
     }));
   };
-  const handleSliderAfterChange = (value: number[]) => {
-    const updated = {
-      ...filters,
-      priceFrom: value[0],
-      priceTo: value[1],
-    };
-    onFilterChange?.(updated);
-  };
-
   return (
     <Card
       title={
@@ -87,7 +78,7 @@ export default function SidebarFilter({
           <span>Bộ lọc phổ biến</span>
         </Space>
       }
-      className="w-full md:w-80 h-fit" // Thêm h-fit để không bị dài quá
+      className="w-full md:w-80 h-fit"
     >
       {/* Khu vực */}
       <div className="mb-4">
@@ -96,8 +87,8 @@ export default function SidebarFilter({
           placeholder="Chọn khu vực"
           className="w-full"
           options={CityOptions}
-          value={filters.city} // 👈 QUAN TRỌNG: Phải bind value
-          onChange={(v) => handleChange("city", v)}
+          value={filters.location?.city}
+          onChange={(v) => handleChange("location", v)}
           allowClear
         />
       </div>
@@ -108,7 +99,7 @@ export default function SidebarFilter({
         <Select
           placeholder="Chọn loại phòng"
           className="w-full"
-          value={filters.roomType} // 👈 QUAN TRỌNG
+          value={filters.roomType} 
           options={Object.values(ERoomType).map((v) => ({
             label: RoomTypeLabel[v],
             value: v,
@@ -124,7 +115,7 @@ export default function SidebarFilter({
         <Select
           placeholder="Chọn loại giường"
           className="w-full"
-          value={filters.bedType} // 👈 QUAN TRỌNG
+          value={filters.bedType} 
           options={Object.values(EBedType).map((v) => ({
             label: BedTypeLabel[v],
             value: v,
@@ -138,7 +129,7 @@ export default function SidebarFilter({
       <div className="mb-4">
         <p className="font-medium mb-2">Tiện nghi</p>
         <Checkbox.Group
-          value={filters.amenities} // 👈 QUAN TRỌNG
+          value={filters.amenities} 
           options={Object.values(EAmenity).map((v) => ({
             label: AmenityLabel[v],
             value: v,
@@ -163,14 +154,7 @@ export default function SidebarFilter({
           max={10000000}
           step={500000}
           value={[filters.priceFrom ?? 0, filters.priceTo ?? 5000000]}
-          onChange={(v) => {
-            const updated = {
-              ...filters,
-              priceFrom: v[0],
-              priceTo: v[1],
-            };
-            setFilters(updated);
-          }}
+          onChange={handleSliderChange}
           tooltip={{
             formatter: (v) => v?.toLocaleString("vi-VN") + " ₫",
           }}

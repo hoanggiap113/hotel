@@ -16,7 +16,7 @@ export enum ERoomType {
 export enum EBedType {
   SINGLE = "single",
   TWIN = "twin",
-  DOUBLE = "double", // Bổ sung (trong JSON có dùng type này)
+  DOUBLE = "double",
   QUEEN = "queen",
   KING = "king",
 }
@@ -67,7 +67,7 @@ export type TRoomFormInput = Omit<
 };
 
 export interface SidebarFilterState {
-  city?: string;
+  location?: ILocation;
   roomType?: string;
   bedType?: string;
   priceFrom?: number;
@@ -81,8 +81,6 @@ export interface BuildingFilter extends SidebarFilterState {
   capacity?: number;
 }
 // --- LABELS (MAPPING) ---
-
-// Sử dụng Record<string, string> để an toàn hơn khi key không nằm trong Enum
 export const RoomTypeLabel: Record<string, string> = {
   [ERoomType.STANDARD]: "Phòng Tiêu chuẩn",
   [ERoomType.SUPERIOR]: "Phòng Cao cấp (Superior)",
@@ -116,7 +114,6 @@ export const AmenityLabel: Record<string, string> = {
   [EAmenity.AIR_CON]: "Điều hòa",
 };
 
-// ... (CityOptions giữ nguyên) ...
 export type CityOption = {
   label: string;
   value: string;

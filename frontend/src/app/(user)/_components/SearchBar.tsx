@@ -3,12 +3,9 @@
 import { Form, Input, Button, DatePicker, App, InputNumber } from "antd";
 import { CalendarOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/hooks/reduxHooks";
-import { updateSearchCriteria } from "@/store/slices/searchSlice";
 export default function SearchBar() {
   const router = useRouter();
   const { message } = App.useApp();
-  const dispatch = useAppDispatch();
   const onFinish = (values: any) => {
     if (!values.checkIn || !values.checkOut) {
       message.error(
