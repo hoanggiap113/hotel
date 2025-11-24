@@ -146,7 +146,7 @@ export class RoomController {
   }
   @get('/rooms/most-picked')
   @response(200)
-  async getMostPickedRoom() {
+  async getMostPickedRoom(@param.query.string('city') city: string) {
     const collection = await this.roomService.getMostPickedRoom(4);
     return collection;
   }
@@ -156,21 +156,29 @@ export class RoomController {
     description: 'Trả về các địa điểm kèm số phòng',
   })
   async getPopularPlace(): Promise<PopularLocation[]> {
-    const collection = (this.roomRepository.dataSource.connector as any).collection('rooms')
+    const collection = (
+      this.roomRepository.dataSource.connector as any
+    ).collection('rooms');
     const pipeline = [
-      {$match: {
-        "location.city" : {$exists: true, $ne: null}
-      }},
-      {$group: {
-        _id:"$location.city",
-        totalRooms:{$sum: 1}
-      }},
-      {$project: {
-        _id: 0,
-        city: "$_id",
-        count: "$totalRooms"
-      }}
-    ]
+      {
+        $match: {
+          'location.city': {$exists: true, $ne: null},
+        },
+      },
+      {
+        $group: {
+          _id: '$location.city',
+          totalRooms: {$sum: 1},
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          city: '$_id',
+          count: '$totalRooms',
+        },
+      },
+    ];
     const results = await collection.aggregate(pipeline).toArray();
     return results;
   }
