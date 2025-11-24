@@ -77,7 +77,7 @@ export interface SidebarFilterState {
 
 export interface BuildingFilter extends SidebarFilterState {
   checkIn?: string;
-  checkOut?: string ;
+  checkOut?: string;
   capacity?: number;
 }
 // --- LABELS (MAPPING) ---
@@ -133,3 +133,28 @@ export const CityOptions: CityOption[] = [
   { label: "Cần Thơ", value: "Cần Thơ" },
   { label: "Hạ Long", value: "Hạ Long" },
 ];
+
+export interface LocationStat {
+  city: string;
+  count: number;
+}
+export interface Destination {
+  name: string;
+  img: string;
+  stays: string;
+}
+
+export type CityImageMap = Record<string, string>;
+
+export const CITY_IMAGES: Record<string, string> = {
+  "Hà Nội": "/hanoi.jpg",
+  "Đà Nẵng": "/danang.jpg",
+  "Hồ Chí Minh": "/hcm.png",
+  "Nha Trang": "/nhatrang.jpg",
+  "Vũng Tàu": "/vungtau.jpg",
+  "Hạ Long": "/halong.jpg",
+  "Cần Thơ": "/cantho.webp",
+  "Phú Quốc": "/phuquoc.jpg",
+  "Hội An": "/hoian.png",
+  "Sa Pa": "/sapa.jpg"
+};

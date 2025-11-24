@@ -1,15 +1,11 @@
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
+import { useDestinations } from "@/hooks/queries/rooms/use-destination";
 
-const destinations = [
-  { name: "Hà Nội", img: "/hanoi.jpg", stays: "15,546 chỗ ở" },
-  { name: "Đà Nẵng", img: "/danang.jpg", stays: "9,321 chỗ ở" },
-  { name: "TP. Hồ Chí Minh", img: "/hcm.png", stays: "21,785 chỗ ở" },
-  { name: "Nha Trang", img: "/nhatrang.jpg", stays: "7,234 chỗ ở" },
-  { name: "Vũng Tàu", img: "/vungtau.jpg", stays: "4,856 chỗ ở" },
-];
+
 export default function PlaceSection() {
+  const {data: destinations} = useDestinations();
   return (
     <>
       <section className="py-16">
@@ -29,7 +25,7 @@ export default function PlaceSection() {
               1024: { slidesPerView: 4.5 },
             }}
           >
-            {destinations.map((item) => (
+            {destinations?.map((item) => (
               <SwiperSlide key={item.name}>
                 <div className="group">
                   <div className="relative h-48 w-full rounded-xl overflow-hidden">

@@ -11,19 +11,18 @@ import {
   post,
   requestBody,
   response,
-  
 } from '@loopback/rest';
-import {Room, RoomFilter} from '../models';
+import {PopularLocation, Room, RoomFilter} from '../models';
 import {RoomService} from '../services';
 import {inject} from '@loopback/core';
-import { repository } from '@loopback/repository';
-import { RoomRepository } from '../repositories';
+import {repository} from '@loopback/repository';
+import {RoomRepository} from '../repositories';
 
 export class RoomController {
   constructor(
     @inject('services.RoomService')
     public roomService: RoomService,
-    @repository(RoomRepository) public roomRepository: RoomRepository
+    @repository(RoomRepository) public roomRepository: RoomRepository,
   ) {}
 
   @get('/rooms')
@@ -152,17 +151,27 @@ export class RoomController {
     return collection;
   }
 
-  // @get("/rooms/pricing/{id}")
-  // @response(200, {
-  //   description: 'Get room pricing details',
-  // })
-  // async getRoomPricingDetails(
-  //   @param.path.string('id') id: string
-  // ): Promise<any> {
-  //   const pricingDetails = await this.roomRepository.;
-  //   if (!pricingDetails) {
-  //     throw HttpErrors.NotFound('Room not found or pricing details unavailable');
-  //   }
-  //   return pricingDetails;
-  // }
+  @get('/rooms/place-stats')
+  @response(200, {
+    description: 'Trả về các địa điểm kèm số phòng',
+  })
+  async getPopularPlace(): Promise<PopularLocation[]> {
+    const collection = (this.roomRepository.dataSource.connector as any).collection('rooms')
+    const pipeline = [
+      {$match: {
+        "location.city" : {$exists: true, $ne: null}
+      }},
+      {$group: {
+        _id:"$location.city",
+        totalRooms:{$sum: 1}
+      }},
+      {$project: {
+        _id: 0,
+        city: "$_id",
+        count: "$totalRooms"
+      }}
+    ]
+    const results = await collection.aggregate(pipeline).toArray();
+    return results;
+  }
 }

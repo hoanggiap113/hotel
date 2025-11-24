@@ -126,3 +126,6 @@ export type Location = {
   ward?:string,
   address?:string
 }
+export type PopularLocation = Pick<Room, 'location'> & {
+  countRoom: number
+}
