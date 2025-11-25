@@ -44,7 +44,7 @@ export default function BuildingCard({
           </p>
         </div>
       </div>
-      <div className="p-4 flex flex-col items-end justify-between min-w-[140px] border-1 border-gray-100">
+      <div className="p-4 flex flex-col items-end justify-between min-w-[140px] border-gray-100">
         <div className="text-right">
           <div className="text-sm text-gray-600">Giá từ</div>
           <div className="text-lg font-bold text-green-500">

@@ -1,33 +1,29 @@
 import { IRoom } from "./room.type";
-import { ILocation } from "./location.type";
+import { IGeoCoordinates, ILocation } from "./location.type";
 export interface IBuilding {
   id?: string;
   name?: string;
   description?: string;
   images?: string[];
-
+  geo?: IGeoCoordinates
   price: number;
   rating: {
     average: number;
     reviewsCount: number;
   };
-  rooms: IRoom
+  rooms: IRoom;
   createdAt?: Date;
   updatedAt?: Date;
   location: ILocation;
   userId?: string;
 }
-export interface IBuildingDetail{
-  id?:string;
-  name?:string;
-  description?:string;
-  images?:string[];
+export interface IBuildingDetail {
+  building: IBuilding;
 
-  rooms: IRoom[]
-  location: ILocation
+  rooms: IRoom[];
 }
-export interface BuildingDetailRequest{
-  id:string,
-  checkIn:string,
-  checkOut:string
+export interface BuildingDetailRequest {
+  id: string;
+  checkIn: string;
+  checkOut: string;
 }

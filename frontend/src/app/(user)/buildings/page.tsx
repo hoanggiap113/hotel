@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Spin, Empty } from "antd";
+import { Empty } from "antd";
 import SearchBarCompact from "./_components/SearchBarCompact";
 import SidebarFilter from "../_components/buildings/SidebarFilters";
 import BuildingCard from "../_components/buildings/BuildingCard";
 import { useBuildingFilter } from "@/hooks/queries/buildings/use-building-filter";
 import { useBuildings } from "@/hooks/queries/buildings/use-building";
 import { useSearchParams } from "next/navigation";
+import BuildingSkeleton from "@/common/components/skeletons/BuildingSkeleton";
 export default function RoomPage() {
   const searchParams = useSearchParams();
   const city = searchParams.get("city");
@@ -33,9 +34,7 @@ export default function RoomPage() {
         {/* Main content */}
         <section className="flex-1 space-y-6">
           {isLoading ? (
-            <div className="flex justify-center items-center h-96">
-              <Spin size="large" tip="Đang tìm phòng..." />
-            </div>
+              <BuildingSkeleton count={5}/>
           ) : buildings.length > 0 ? (
             buildings.map((building) => (
               <BuildingCard

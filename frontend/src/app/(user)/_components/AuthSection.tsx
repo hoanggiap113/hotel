@@ -14,8 +14,8 @@ export default function AuthSection() {
       ) : (
         <Link href="/login">
           <span
-            className="bg-blue-500 text-white font-semibold py-2 px-4              
-            rounded-xl transition duration-150 inline-block hover:bg-blue-600"
+            className="text-black font-semibold py-2 px-4 border-1 border-gray-400             
+            rounded-xl transition duration-150 inline-block hover:bg-blue-100"
           >
             Login
           </span>

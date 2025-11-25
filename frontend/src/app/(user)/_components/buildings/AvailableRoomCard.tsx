@@ -1,16 +1,15 @@
 import { AmenityData } from "@/types/amenity-icons";
-import { IBuildingDetail } from "@/types/building.type";
-import { RoomTypeLabel } from "@/types/room.type";
+import { IRoom, RoomTypeLabel } from "@/types/room.type";
 import Image from "next/image";
 
 export default function AvailableRoomCard({
   handleOrderRoom,
-  building,
+  rooms,
 }: {
   handleOrderRoom: (roomId: string) => void;
-  building: IBuildingDetail;
+  rooms: IRoom[];
 }) {
-  if (!building.rooms || building.rooms.length === 0) {
+  if (!rooms || rooms.length === 0) {
     return (
       <div className="text-center text-gray-500 py-10">
         <p>Rất tiếc, không còn phòng trống nào trong ngày bạn chọn.</p>
@@ -20,7 +19,7 @@ export default function AvailableRoomCard({
 
   return (
     <>
-      {building.rooms.map((room) => {
+      {rooms.map((room) => {
         const roomAmenities =
           room.amenities
             ?.map(
@@ -35,7 +34,7 @@ export default function AvailableRoomCard({
         return (
           <div
             key={room.id}
-            className="flex flex-col md:flex-row shadow-lg overflow-hidden bg-white mb-3 px-2 "
+            className="flex flex-col md:flex-row shadow-sm overflow-hidden bg-white mb-3 px-1 "
           >
             {/* Ảnh phòng */}
             <div className="relative w-full md:w-1/3 h-60 md:h-auto">

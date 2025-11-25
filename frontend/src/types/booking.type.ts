@@ -8,10 +8,10 @@ export enum EBookingStatus {
 }
 
 export interface IBookingPricing {
-  roomPrice: number; 
+  roomPrice: number;
   tax: number;
   discount: number;
-  total: number; 
+  total: number;
 }
 export interface SessionBookingInfo {
   checkIn: string;
@@ -30,7 +30,7 @@ export interface IBooking {
   _id: string;
   userId: string;
   roomId: string;
-  room?:IRoom
+  room?: IRoom;
   checkIn: Date;
   checkOut: Date;
   status: EBookingStatus;
@@ -38,9 +38,8 @@ export interface IBooking {
   guests: IBookingGuests;
   createdAt: Date;
   updatedAt: Date;
-  redirectUrl?: string
+  redirectUrl?: string;
 }
-
 
 export interface PricingBreakdown {
   roomPrice: number;
@@ -48,16 +47,20 @@ export interface PricingBreakdown {
   discount: number;
   total: number;
 }
-export interface CreateBookingPayload {
+export interface IBookingPayload {
   roomId: string;
-  checkIn: Date | string;
-  checkOut: Date | string;
-  guestInfo: {
+  checkIn: string;
+  checkOut: string;
+  guests: {
     name: string;
     phone: string;
     email: string;
     note?: string;
   };
-  discountId?: string; 
-  paymentMethod: string; 
+  paymentMethod: string;
+  discountId?: string;
+} 
+export interface BookingResponse {
+  Booking: IBooking;
+  redirectUrl?: string;
 }

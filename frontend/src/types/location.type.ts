@@ -7,6 +7,10 @@ export interface ILocation {
   ward?: string;
   address?: string;
 };
+export interface IGeoCoordinates {
+  type: 'Point';
+  coordinates: [number, number]; 
+}
 
 export const CityOptions: CityOption[] = [
   { label: "Hà Nội", value: "Hà Nội" },

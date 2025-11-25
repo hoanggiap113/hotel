@@ -1,15 +1,14 @@
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
-import { useDestinations } from "@/hooks/queries/rooms/use-destination";
-
+import { useDestinations } from "@/hooks/queries/rooms/use-room";
 
 export default function PlaceSection() {
   const {data: destinations} = useDestinations();
   return (
     <>
       <section className="py-16">
-        <div className="container mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-8">
           <h2 className="text-2xl font-bold text-black mb-6">
             Các điểm đến của chúng tôi
           </h2>

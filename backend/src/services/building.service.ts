@@ -27,7 +27,6 @@ export class BuildingService {
   async getBuildings(
     filtersParams: BuildingFilter,
   ): Promise<BuildingWithMinPrice[]> {
-
     const conflictingRoomIds = await this.getConflictingRoomIds(
       filtersParams.checkIn,
       filtersParams.checkOut,
@@ -42,7 +41,7 @@ export class BuildingService {
     console.log('Available rooms:', availableRooms.length);
 
     if (availableRooms.length === 0) {
-      return []; 
+      return [];
     }
 
     const availableBuildingIds = [
@@ -86,20 +85,23 @@ export class BuildingService {
     checkIn: string,
     checkOut: string,
   ): Promise<BuildingDetail | null> {
-    let buildingResponse: BuildingDetail;
-    const building = await this.buildingRepo.findById(id);
-    if (!building) {
-      throw new HttpErrors.NotFound('Không tìm thấy tòa nhà');
-    }
     const conflictingRoomIds = await this.getConflictingRoomIds(
       checkIn,
       checkOut,
     );
-    const roomWhere: Where<Room> = {};
+    const building = await this.buildingRepo.findById(id);
+
+    if (!building) {
+      throw new HttpErrors.NotFound('Không tìm thấy tòa nhà');
+    }
+    const roomWhere: Where<Room> = {
+      buildingId: building.id,
+    };
+
     if (conflictingRoomIds.length > 0) {
       roomWhere.id = {nin: conflictingRoomIds};
     }
-    roomWhere.buildingId = building.id;
+
     const rooms = await this.roomRepo.find({
       where: roomWhere,
     });
@@ -110,33 +112,33 @@ export class BuildingService {
     };
   }
   private async getConflictingRoomIds(
-  checkInStr: string,
-  checkOutStr: string,
-): Promise<string[]> {
-  if (!checkInStr || !checkOutStr) {
-    return [];
+    checkInStr: string,
+    checkOutStr: string,
+  ): Promise<string[]> {
+    if (!checkInStr || !checkOutStr) {
+      return [];
+    }
+
+    const checkIn = new Date(checkInStr);
+    const checkOut = new Date(checkOutStr);
+
+    if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
+      return [];
+    }
+
+    const whereBooking: Where<Booking> = {
+      and: [
+        {status: {neq: 'cancelled'}},
+        {checkIn: {lt: checkOut}},
+        {checkOut: {gt: checkIn}},
+      ],
+    };
+
+    const conflictedBookings = await this.bookingRepo.find({
+      where: whereBooking,
+      fields: {roomId: true},
+    });
+
+    return [...new Set(conflictedBookings.map(b => b.roomId))];
   }
-
-  const checkIn = new Date(checkInStr);
-  const checkOut = new Date(checkOutStr);
-
-  if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
-    return [];
-  }
-
-  const whereBooking: Where<Booking> = {
-    and: [
-      { status: { neq: 'cancelled' } },
-      { checkIn: { lt: checkOut } },
-      { checkOut: { gt: checkIn } },
-    ],
-  };
-
-  const conflictedBookings = await this.bookingRepo.find({
-    where: whereBooking,
-    fields: { roomId: true },
-  });
-
-  return [...new Set(conflictedBookings.map(b => b.roomId))];
-}
 }
