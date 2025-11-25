@@ -5,7 +5,7 @@ import { Spin } from "antd";
 import formatLocation from "@/lib/util/format-address";
 import PlaceSection from "../../_components/PlaceSection";
 import { useRouter } from "next/navigation";
-import AvailableRoomCard from "../../_components/buildings/AvailableRoomCard";
+import AvailableRoomCard from "../_components/AvailableRoomCard";
 import { useBuildingDetail } from "@/hooks/queries/buildings/use-building";
 import BuildingLocationMapWrapper from "../_components/BuildingLocationMapWrapper";
 export default function BuildingDetailPage() {
