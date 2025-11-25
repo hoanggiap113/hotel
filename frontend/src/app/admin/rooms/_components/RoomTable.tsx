@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Table, Button, Image, Tag, App, message } from "antd";
+import { Button, Image, Tag } from "antd";
 import Link from "next/link";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { IRoom } from "@/types/room.type";
@@ -17,18 +17,16 @@ export default function RoomTable(
         if (!images || images.length === 0) {
           return "Không có ảnh";
         }
-
-        const imageUrl = images[0];
-
-        const fullImageUrl = `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`;
-
         return (
           <Image
-            src={fullImageUrl}
+            src={images[0] || "example.png"}
             alt="Ảnh phòng"
-            width={80}
-            height={60}
-            style={{ objectFit: "cover" }}
+            width="70%"
+            style={{
+              height: 140,
+              objectFit: "cover",
+              borderRadius: 8,
+            }}
             preview={true}
           />
         );
@@ -73,7 +71,21 @@ export default function RoomTable(
         );
       },
     },
-    { title: "Địa chỉ", dataIndex: "address", key: "address" },
+    {
+      title: "Địa điểm",
+      dataIndex: "location",
+      key: "location",
+      width: 180,
+      render: (location: IRoom["location"]) => {
+        if (!location) return "—";
+        return (
+          <div className="text-sm">
+            <div className="font-medium">{location.city}</div>
+            <div className="text-gray-500 text-xs">{location.address}</div>
+          </div>
+        );
+      },
+    },
     {
       title: "Giá",
       dataIndex: "price",
@@ -87,8 +99,26 @@ export default function RoomTable(
         })}/đêm`;
       },
     },
-    { title: "Ngày tạo", dataIndex: "createdAt", key: "createdAt" },
-    { title: "Ngày cập nhật", dataIndex: "updatedAt", key: "updatedAt" },
+    {
+      title: "Ngày tạo",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 120,
+      render: (date: Date) => {
+        if (!date) return "—";
+        return new Date(date).toLocaleDateString("vi-VN");
+      },
+    },
+    {
+      title: "Cập nhật",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      width: 120,
+      render: (date: Date) => {
+        if (!date) return "—";
+        return new Date(date).toLocaleDateString("vi-VN");
+      },
+    },
     {
       title: "Thao tác",
       key: "actions",

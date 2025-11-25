@@ -41,7 +41,6 @@ export interface IRoom {
   id: string;
   _id?: string;
   name: string;
-  description?: string;
   images?: string[];
   roomType: ERoomType | string;
   bedType: EBedType | string;
@@ -52,6 +51,8 @@ export interface IRoom {
     average: number;
     reviewsCount: number;
   };
+  ownerId?: string;
+  buildingId?: string;
   createdAt: Date;
   updatedAt: Date;
   location: ILocation;
@@ -156,5 +157,39 @@ export const CITY_IMAGES: Record<string, string> = {
   "Cần Thơ": "/cantho.webp",
   "Phú Quốc": "/phuquoc.jpg",
   "Hội An": "/hoian.png",
-  "Sa Pa": "/sapa.jpg"
+  "Sa Pa": "/sapa.jpg",
 };
+
+interface AmenityOption {
+  label: string;
+  value: EAmenity; // Sử dụng enum làm value
+}
+interface RoomTypeOption {
+  label: string;
+  value: ERoomType;
+}
+interface BedTypeOption {
+  label: string;
+  value: EBedType;
+}
+
+export const AMENITY_OPTIONS: AmenityOption[] = [
+  { label: "TV", value: EAmenity.TV },
+  { label: "Wifi", value: EAmenity.WIFI },
+  { label: "Bữa sáng", value: EAmenity.BREAKFAST },
+  { label: "Bồn tắm", value: EAmenity.BATHTUB },
+  { label: "Bể bơi", value: EAmenity.POOL },
+];
+
+export const ROOMTYPE_OPTIONS: RoomTypeOption[] = [
+  { label: "Phòng sang trọng", value: ERoomType.DELUXE },
+  { label: "Phòng cao cấp", value: ERoomType.SUITE },
+  { label: "Phòng đơn", value: ERoomType.SINGLE },
+  { label: "Phòng đôi", value: ERoomType.DOUBLE },
+];
+export const BEDTYPE_OPTIONS: BedTypeOption[] = [
+  { label: "Giường Queen", value: EBedType.QUEEN },
+  { label: "Giường King", value: EBedType.KING },
+  { label: "Giường Đơn", value: EBedType.SINGLE },
+  { label: "Giường đôi", value: EBedType.TWIN },
+];

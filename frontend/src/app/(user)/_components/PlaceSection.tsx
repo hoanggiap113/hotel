@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
@@ -24,7 +25,7 @@ export default function PlaceSection() {
               1024: { slidesPerView: 4.5 },
             }}
           >
-            {destinations?.map((item) => (
+            {destinations?.map((item : any) => (
               <SwiperSlide key={item.name}>
                 <div className="group">
                   <div className="relative h-48 w-full rounded-xl overflow-hidden">

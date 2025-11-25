@@ -1,15 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { roomService } from "@/services/room.service";
+import { CITY_IMAGES, Destination, IRoom } from "@/types/room.type";
+import { createBaseQuery } from "../base.query";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { CITY_IMAGES, Destination } from "@/types/room.type";
-export const useRooms = () => {};
-export const useRoomDetail = (id: string) => {
-  return useQuery({
-    queryKey: ["detail"],
-    queryFn: () => roomService.getRoom(id),
-    staleTime: 1000 * 60 * 5,
-  });
+
+// Tạo base queries
+const roomBaseQueries = createBaseQuery<IRoom>("rooms", roomService);
+
+export const useRooms = (params?: any) => {
+  return roomBaseQueries.useList(params);
 };
 
+export const useRoomDetail = (id?: string) => {
+  return roomBaseQueries.useDetail(id);
+};
+
+export const useCreateRoom = roomBaseQueries.useCreate;
+export const useUpdateRoom = roomBaseQueries.useUpdate;
+export const useDeleteRoom = roomBaseQueries.useDelete;
+
+//Custom Hook:
 export const useDestinations = (): UseQueryResult<Destination[]> => {
   return useQuery({
     queryKey: ["destinations"],
